@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Menú VORAZ Sushi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Fuentes Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 para notificaciones -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* Personalización de fuentes y estilos base */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .title-font {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 0.05em;
+        }
+        .text-gold { color: #fbbf24; }
+        .bg-gold { background-color: #fbbf24; }
+        .border-gold { border-color: #fbbf24; }
+
+        /* Animaciones */
+        .click-shrink:active { transform: scale(0.95); }
+
+        /* Estilos del Botón Flotante del Carrito */
+        .cart-float {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            bottom: -100px; /* Oculto por defecto */
+        }
+        .cart-float.visible {
+            bottom: 20px;
+        }
+
+        /* Animación del logo */
+        .logo-container {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .logo-glow {
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4));
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+        .logo-glow:hover {
+            filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.7));
+            transform: scale(1.05);
+        }
+
+        /* Panel del carrito (Drawer) */
+        .cart-drawer {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+        .cart-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .cart-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cart-item {
+            transition: all 0.2s ease;
+        }
+        /* Ocultar scrollbar pero mantener funcionalidad */
+        #cartItems {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        #cartItems::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        /* Ocultar flechas/spinners de input number */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Modal de Delivery */
+        .delivery-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .delivery-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .delivery-modal-content {
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .delivery-modal.open .delivery-modal-content {
+            transform: scale(1) translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-100 pb-32">
+
+    <!-- BLOQUE 1: CABECERA -->
+    <header class="text-center py-8 px-4 bg-slate-800 border-b border-slate-700 shadow-lg relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+
+        <!-- Logo animado -->
+        <div class="logo-container mb-4">
+            <img src="img/logo.png" alt="VORAZ Logo" class="logo-glow mx-auto w-16 h-16 md:w-20 md:h-20">
+        </div>
+
+        <h1 class="text-5xl text-white mb-1 tracking-widest uppercase" style="text-shadow: 2px 2px 0px #b45309;">VORAZ</h1>
+        <h2 class="text-xl text-amber-400 tracking-[0.2em] mb-2 border-b-2 border-amber-500 inline-block pb-1">SUSHI DE AUTOR</h2>
+        <p class="text-gray-400 italic font-light text-xs">"Sabor fusión, técnica experta"</p>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4">
+
+        <!-- BLOQUE 2: HOT ROLLS -->
+        <section class="mt-8">
+            <div class="flex items-center mb-4">
+                <h2 class="text-3xl text-white mr-2">HOT ROLLS <span class="text-amber-500">🔥</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <!-- Producto 1 -->
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-amber-500 shadow-md flex gap-3 relative overflow-hidden group">
+                    <div class="w-20 h-20 bg-slate-700 rounded flex-shrink-0 overflow-hidden">
+                        <img src="img/kani.jpeg" alt="Kani Volcán" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl text-white leading-none">Kani Volcán</h3>
+                                <p class="text-xs text-amber-300 font-bold mb-1">(El Gratinado)</p>
+                            </div>
+                            <span class="text-lg text-gold font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-gray-300 mb-2">Relleno de kanikama, queso crema y cebollín. Frito en panko y coronado con Pasta Dinamita Gratinada al fuego con un toque ahumado.</p>
+                        <div class="flex justify-end items-center gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyKani', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyKani" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyKani', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Kani Volcán', 6900, 'qtyKani')" class="bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold py-1 px-3 rounded-full border border-slate-600 hover:border-amber-500 transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 2 -->
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-amber-500 shadow-md flex gap-3">
+                    <div class="w-20 h-20 bg-slate-700 rounded flex-shrink-0 overflow-hidden">
+                        <img src="img/pollo_fuji.jpeg" alt="Pollo Fuji" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl text-white leading-none">Pollo Fuji</h3>
+                                <p class="text-xs text-amber-300 font-bold mb-1">(El Agridulce)</p>
+                            </div>
+                            <span class="text-lg text-gold font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-gray-300 mb-2">Pollo, queso crema y bastones de pimentón rojo (toque crunch). Bañado en salsa Fuji agridulce y lluvia de maní tostado.</p>
+                        <div class="flex justify-end items-center gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyFuji', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyFuji" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyFuji', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Pollo Fuji', 6900, 'qtyFuji')" class="bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold py-1 px-3 rounded-full border border-slate-600 hover:border-amber-500 transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 3 -->
+                <div class="bg-slate-800 p-3 rounded-lg border-l-4 border-amber-500 shadow-md flex gap-3 md:col-span-2">
+                    <div class="w-20 h-20 bg-slate-700 rounded flex-shrink-0 overflow-hidden">
+                        <img src="img/tropical.jpeg" alt="Tropical Fire" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl text-white leading-none">Tropical Fire</h3>
+                                <p class="text-xs text-amber-300 font-bold mb-1">(El Exótico)</p>
+                            </div>
+                            <span class="text-lg text-gold font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-gray-300 mb-2">Relleno de plátano maduro, tocineta ahumada y queso crema. Frito en panko y coronado con topping de pollo crispy y salsa Teriyaki.</p>
+                        <div class="flex justify-end items-center gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyTropical', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyTropical" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyTropical', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Tropical Fire', 6900, 'qtyTropical')" class="bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold py-1 px-3 rounded-full border border-slate-600 hover:border-amber-500 transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOQUE 3: FRESH ROLLS -->
+        <section class="mt-8">
+            <div class="flex items-center mb-4">
+                <h2 class="text-3xl text-white mr-2">FRESH ROLLS <span class="text-blue-400">✨</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- Producto 4 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-700 flex flex-col">
+                    <img src="img/inka.jpeg" alt="Inka Real" class="h-48 w-full object-contain bg-slate-900">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Inka Real</h3>
+                            <span class="text-gold font-bold">$7.900</span>
+                        </div>
+                        <p class="text-xs text-blue-200 mb-2">(El Nikkei)</p>
+                        <p class="text-xs text-gray-400 mb-3 flex-grow">Camarón furai (frito), queso crema y cilantro fresco. Envuelto en palta. Coronado con montaña de Hilos de Camote y salsa Acevichada.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyInka', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyInka" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyInka', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Inka Real', 7900, 'qtyInka')" class="text-xs bg-slate-700 hover:bg-blue-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 5 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-700 flex flex-col">
+                    <img src="img/citrus.jpeg" alt="Citrus Fresh" class="h-48 w-full object-contain bg-slate-900">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Citrus Fresh</h3>
+                            <span class="text-gold font-bold">$7.900</span>
+                        </div>
+                        <p class="text-xs text-blue-200 mb-2">(El Aromático)</p>
+                        <p class="text-xs text-gray-400 mb-3 flex-grow">Camarón cocido, palta y queso crema al limón. Envuelto en sésamo mix, con láminas de limón sutil y un punto de salsa Spicy.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyCitrus', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyCitrus" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyCitrus', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Citrus Fresh', 7900, 'qtyCitrus')" class="text-xs bg-slate-700 hover:bg-blue-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 6 -->
+                <div class="bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-700 flex flex-col">
+                    <img src="img/ocean.jpeg" alt="Ocean Wakame" class="h-48 w-full object-contain bg-slate-900">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Ocean Wakame</h3>
+                            <span class="text-gold font-bold">$7.900</span>
+                        </div>
+                        <p class="text-xs text-blue-200 mb-2">(El Gourmet)</p>
+                        <p class="text-xs text-gray-400 mb-3 flex-grow">Camarón frito y queso crema. Envuelto en palta, cubierto con ensalada de algas Wakame y reducción de Soya-Miel.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyWakame', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyWakame" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyWakame', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Ocean Wakame', 7900, 'qtyWakame')" class="text-xs bg-slate-700 hover:bg-blue-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOQUE 4: LÍNEA CLÁSICA -->
+        <section class="mt-8">
+            <div class="flex items-center mb-4">
+                <h2 class="text-3xl text-white mr-2">LOS CLÁSICOS <span class="text-gray-400">🍙</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+
+                <!-- FRITOS TEMPURA -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <div class="flex gap-3 mb-3 border-b border-slate-700 pb-3">
+                        <img src="img/clasicofrito.jpg" alt="Frito" class="w-16 h-16 rounded-lg object-cover">
+                        <div>
+                            <h3 class="text-amber-400 font-bold">FRITOS</h3>
+                            <p class="text-xs text-gray-500">(Panko) - 10 piezas</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Pollo / Queso / Cebollín</span>
+                                <span class="text-gold">$4.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyFritoPollo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyFritoPollo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyFritoPollo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Frito Pollo', 4500, 'qtyFritoPollo')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Kani / Queso / Cebollín</span>
+                                <span class="text-gold">$4.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyFritoKani', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyFritoKani" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyFritoKani', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Frito Kani', 4500, 'qtyFritoKani')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Camarón / Queso / Cebollín</span>
+                                <span class="text-gold">$4.700</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyFritoCamaron', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyFritoCamaron" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyFritoCamaron', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Frito Camarón', 4700, 'qtyFritoCamaron')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- CALIFORNIA -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <div class="flex gap-3 mb-3 border-b border-slate-700 pb-3">
+                        <img src="img/clasicocalifornia.jpg" alt="California" class="w-16 h-16 rounded-lg object-cover">
+                        <div>
+                            <h3 class="text-amber-400 font-bold">CALIFORNIA</h3>
+                            <p class="text-xs text-gray-500">(Sésamo tostado) - 10 piezas</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Pollo / Queso / Palta</span>
+                                <span class="text-gold">$4.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyCalPollo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyCalPollo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyCalPollo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('California Pollo', 4500, 'qtyCalPollo')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Kani / Queso / Palta</span>
+                                <span class="text-gold">$4.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyCalKani', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyCalKani" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyCalKani', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('California Kani', 4500, 'qtyCalKani')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Camarón / Queso / Palta</span>
+                                <span class="text-gold">$4.700</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyCalCamaron', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyCalCamaron" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyCalCamaron', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('California Camarón', 4700, 'qtyCalCamaron')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- ENVUELTOS EN PALTA -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <div class="flex gap-3 mb-3 border-b border-slate-700 pb-3">
+                        <img src="img/clasicopalta.jpg" alt="Envuelto Palta" class="w-16 h-16 rounded-lg object-cover">
+                        <div>
+                            <h3 class="text-green-400 font-bold">ENVUELTOS EN PALTA</h3>
+                            <p class="text-xs text-gray-500">(Toque aceite de sésamo) - 10 piezas</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Pollo / Queso / Cebollín</span>
+                                <span class="text-gold">$5.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyPaltaPollo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyPaltaPollo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyPaltaPollo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Palta Pollo', 5500, 'qtyPaltaPollo')" class="bg-slate-700 hover:bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Kani / Queso / Cebollín</span>
+                                <span class="text-gold">$5.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyPaltaKani', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyPaltaKani" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyPaltaKani', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Palta Kani', 5500, 'qtyPaltaKani')" class="bg-slate-700 hover:bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Camarón / Queso / Cebollín</span>
+                                <span class="text-gold">$5.700</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyPaltaCamaron', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyPaltaCamaron" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyPaltaCamaron', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Palta Camarón', 5700, 'qtyPaltaCamaron')" class="bg-slate-700 hover:bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- ENVUELTOS EN QUESO -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <div class="flex gap-3 mb-3 border-b border-slate-700 pb-3">
+                        <img src="img/clasicoqueso.jpg" alt="Envuelto Queso" class="w-16 h-16 rounded-lg object-cover">
+                        <div>
+                            <h3 class="text-yellow-200 font-bold">ENVUELTOS EN QUESO</h3>
+                            <p class="text-xs text-gray-500">(Flameado) - 10 piezas</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Pollo / Palta / Cebollín</span>
+                                <span class="text-gold">$5.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyQuesoPollo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyQuesoPollo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyQuesoPollo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Queso Pollo', 5500, 'qtyQuesoPollo')" class="bg-slate-700 hover:bg-yellow-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Kani / Palta / Cebollín</span>
+                                <span class="text-gold">$5.500</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyQuesoKani', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyQuesoKani" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyQuesoKani', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Queso Kani', 5500, 'qtyQuesoKani')" class="bg-slate-700 hover:bg-yellow-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="text-xs text-gray-300">
+                                <span class="block font-bold">Camarón / Palta / Cebollín</span>
+                                <span class="text-gold">$5.700</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="flex items-center bg-slate-600 rounded-full">
+                                    <button onclick="changeQty('qtyQuesoCamaron', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                    <input id="qtyQuesoCamaron" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                    <button onclick="changeQty('qtyQuesoCamaron', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                </div>
+                                <button onclick="addWithQty('Queso Camarón', 5700, 'qtyQuesoCamaron')" class="bg-slate-700 hover:bg-yellow-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BLOQUE 5: COMBOS -->
+        <section class="mt-8">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500 rounded-xl p-4 text-center shadow-lg relative overflow-hidden">
+                <h2 class="text-3xl text-amber-400 mb-4">COMBOS <i class="fas fa-utensils text-xl ml-2"></i></h2>
+
+                <div class="space-y-4">
+                    <!-- DÚO EXPRESS -->
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="text-left">
+                                <span class="block text-white font-bold text-sm">DUO EXPRESS</span>
+                                <span class="text-xs text-gray-400">2 Rolls Fritos Clasicos + Soya y Teriyaki</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-500 line-through text-xs">$8.400</span>
+                                <span class="text-gold font-bold block">$7.500</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Roll 1 - Proteina</label>
+                                <select id="duoRoll1" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Pollo">Pollo</option>
+                                    <option value="Kani">Kani</option>
+                                    <option value="Camaron">Camaron</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Roll 2 - Proteina</label>
+                                <select id="duoRoll2" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Pollo">Pollo</option>
+                                    <option value="Kani">Kani</option>
+                                    <option value="Camaron">Camaron</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="text-green-400 text-[10px] mb-2 text-center"><i class="fas fa-check-circle mr-1"></i>Incluye: Salsa Soya + Salsa Teriyaki</p>
+                        <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyDuo', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyDuo" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyDuo', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addComboDuo()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-full click-shrink font-bold flex items-center gap-1"><i class="fas fa-plus"></i> AGREGAR</button>
+                        </div>
+                    </div>
+
+                    <!-- MIX DEGUSTACIÓN -->
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="text-left">
+                                <span class="block text-white font-bold text-sm">MIX DEGUSTACION</span>
+                                <span class="text-xs text-gray-400">1 Frito + 1 California + Soya, Teriyaki + 1 Premium</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-500 line-through text-xs">$9.500</span>
+                                <span class="text-gold font-bold block">$7.900</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Frito - Proteina</label>
+                                <select id="mixFrito" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Pollo">Pollo</option>
+                                    <option value="Kani">Kani</option>
+                                    <option value="Camaron">Camaron</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-[10px]">California - Proteina</label>
+                                <select id="mixCalifornia" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Pollo">Pollo</option>
+                                    <option value="Kani">Kani</option>
+                                    <option value="Camaron">Camaron</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="text-green-400 text-[10px]">Salsa Premium (gratis)</label>
+                            <select id="mixSalsa" class="w-full bg-slate-700 border border-green-600 rounded px-2 py-1 text-white text-xs focus:border-green-500 focus:outline-none">
+                                <option value="">Selecciona tu salsa premium...</option>
+                                <option value="Spicy">Spicy</option>
+                                <option value="Maracuya">Maracuya</option>
+                                <option value="Acevichada">Acevichada</option>
+                                <option value="Soya-Miel">Soya-Miel</option>
+                                <option value="Fuji">Fuji</option>
+                            </select>
+                        </div>
+                        <p class="text-green-400 text-[10px] mb-2 text-center"><i class="fas fa-check-circle mr-1"></i>Incluye: Salsa Soya + Salsa Teriyaki</p>
+                        <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyMix', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyMix" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyMix', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addComboMix()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-full click-shrink font-bold flex items-center gap-1"><i class="fas fa-plus"></i> AGREGAR</button>
+                        </div>
+                    </div>
+
+                    <!-- EXPERIENCIA FUSIÓN -->
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="text-left">
+                                <span class="block text-white font-bold text-sm">EXPERIENCIA FUSION</span>
+                                <span class="text-xs text-gray-400">30 Piezas Premium (3 Rolls) + Soya, Teriyaki + 1 Premium</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-gray-500 line-through text-xs">$21.500</span>
+                                <span class="text-gold font-bold block">$18.900</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Roll 1</label>
+                                <select id="fusionRoll1" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Kani Volcan">Kani Volcan</option>
+                                    <option value="Pollo Fuji">Pollo Fuji</option>
+                                    <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Inka Real">Inka Real</option>
+                                    <option value="Citrus Fresh">Citrus Fresh</option>
+                                    <option value="Ocean Wakame">Ocean Wakame</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Roll 2</label>
+                                <select id="fusionRoll2" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Kani Volcan">Kani Volcan</option>
+                                    <option value="Pollo Fuji">Pollo Fuji</option>
+                                    <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Inka Real">Inka Real</option>
+                                    <option value="Citrus Fresh">Citrus Fresh</option>
+                                    <option value="Ocean Wakame">Ocean Wakame</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-[10px]">Roll 3</label>
+                                <select id="fusionRoll3" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-xs focus:border-amber-500 focus:outline-none">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Kani Volcan">Kani Volcan</option>
+                                    <option value="Pollo Fuji">Pollo Fuji</option>
+                                    <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Inka Real">Inka Real</option>
+                                    <option value="Citrus Fresh">Citrus Fresh</option>
+                                    <option value="Ocean Wakame">Ocean Wakame</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="text-green-400 text-[10px]">Salsa Premium (gratis)</label>
+                            <select id="fusionSalsa" class="w-full bg-slate-700 border border-green-600 rounded px-2 py-1 text-white text-xs focus:border-green-500 focus:outline-none">
+                                <option value="">Selecciona tu salsa premium...</option>
+                                <option value="Spicy">Spicy</option>
+                                <option value="Maracuya">Maracuya</option>
+                                <option value="Acevichada">Acevichada</option>
+                                <option value="Soya-Miel">Soya-Miel</option>
+                                <option value="Fuji">Fuji</option>
+                            </select>
+                        </div>
+                        <p class="text-green-400 text-[10px] mb-2 text-center"><i class="fas fa-check-circle mr-1"></i>Incluye: Salsa Soya + Salsa Teriyaki</p>
+                        <div class="flex items-center justify-end gap-2">
+                            <div class="flex items-center bg-slate-700 rounded-full">
+                                <button onclick="changeQty('qtyFusion', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                                <input id="qtyFusion" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyFusion', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addComboFusion()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-full click-shrink font-bold flex items-center gap-1"><i class="fas fa-plus"></i> AGREGAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXTRAS COMPLETOS Y DETALLADOS -->
+        <section class="mt-8 mb-4">
+             <div class="flex items-center mb-4">
+                <h2 class="text-3xl text-white mr-2">ENTRADAS Y EXTRAS <span class="text-red-400">🥢</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <!-- GYOSAS -->
+                <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-amber-500">
+                     <h3 class="text-xl text-white mb-2"><i class="fas fa-dumpling text-amber-500 mr-2"></i> GYOSAS (5 Unid.)</h3>
+                     <p class="text-gray-400 italic text-xs mb-3">Empanaditas japonesas</p>
+
+                     <div class="space-y-3">
+                        <!-- Gyosa Cerdo -->
+                        <div class="border-b border-slate-700 pb-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-300">Cerdo</span>
+                                <span class="text-gold font-bold text-sm">$3.000</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex bg-slate-700 rounded-full p-0.5">
+                                    <button onclick="selectGyosaTipo('cerdo', 'frita')" id="btnGyosaCerdoFrita" class="px-2 py-1 text-[10px] rounded-full bg-amber-500 text-white font-bold transition-all">Frita</button>
+                                    <button onclick="selectGyosaTipo('cerdo', 'vapor')" id="btnGyosaCerdoVapor" class="px-2 py-1 text-[10px] rounded-full text-gray-400 font-bold transition-all">Al Vapor</button>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="flex items-center bg-slate-600 rounded-full">
+                                        <button onclick="changeQty('qtyGyosaCerdo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                        <input id="qtyGyosaCerdo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                        <button onclick="changeQty('qtyGyosaCerdo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                    </div>
+                                    <button onclick="addGyosa('Cerdo', 3000, 'qtyGyosaCerdo', 'cerdo')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gyosa Pollo -->
+                        <div class="border-b border-slate-700 pb-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-300">Pollo</span>
+                                <span class="text-gold font-bold text-sm">$3.000</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex bg-slate-700 rounded-full p-0.5">
+                                    <button onclick="selectGyosaTipo('pollo', 'frita')" id="btnGyosaPolloFrita" class="px-2 py-1 text-[10px] rounded-full bg-amber-500 text-white font-bold transition-all">Frita</button>
+                                    <button onclick="selectGyosaTipo('pollo', 'vapor')" id="btnGyosaPolloVapor" class="px-2 py-1 text-[10px] rounded-full text-gray-400 font-bold transition-all">Al Vapor</button>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="flex items-center bg-slate-600 rounded-full">
+                                        <button onclick="changeQty('qtyGyosaPollo', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                        <input id="qtyGyosaPollo" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                        <button onclick="changeQty('qtyGyosaPollo', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                    </div>
+                                    <button onclick="addGyosa('Pollo', 3000, 'qtyGyosaPollo', 'pollo')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gyosa Camarón -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-300">Camarón</span>
+                                <span class="text-gold font-bold text-sm">$3.000</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex bg-slate-700 rounded-full p-0.5">
+                                    <button onclick="selectGyosaTipo('camaron', 'frita')" id="btnGyosaCamaronFrita" class="px-2 py-1 text-[10px] rounded-full bg-amber-500 text-white font-bold transition-all">Frita</button>
+                                    <button onclick="selectGyosaTipo('camaron', 'vapor')" id="btnGyosaCamaronVapor" class="px-2 py-1 text-[10px] rounded-full text-gray-400 font-bold transition-all">Al Vapor</button>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="flex items-center bg-slate-600 rounded-full">
+                                        <button onclick="changeQty('qtyGyosaCamaron', -1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">-</button>
+                                        <input id="qtyGyosaCamaron" type="number" value="1" min="1" max="10" class="w-6 bg-transparent text-white text-center text-xs focus:outline-none">
+                                        <button onclick="changeQty('qtyGyosaCamaron', 1)" class="w-5 h-5 text-white hover:bg-slate-500 rounded-full text-xs">+</button>
+                                    </div>
+                                    <button onclick="addGyosa('Camarón', 3000, 'qtyGyosaCamaron', 'camaron')" class="bg-slate-700 hover:bg-amber-600 text-white w-6 h-6 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-xs"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
+                <!-- SALSAS Y ADICIONALES -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <h3 class="text-xl text-amber-400 mb-3 border-b border-slate-700 pb-1">SALSAS Y EXTRAS</h3>
+                    <ul class="space-y-2">
+                        <!-- Salsas -->
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-pepper-hot text-red-500 mr-1"></i> Salsa Spicy</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Spicy', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-lemon text-green-400 mr-1"></i> Salsa Acevichada</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Acevichada', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-mountain text-white mr-1"></i> Salsa Fuji</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Fuji', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-fruit-apple text-yellow-500 mr-1"></i> Salsa Maracuyá</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Maracuyá', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-fire text-orange-400 mr-1"></i> Salsa Teriyaki</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Teriyaki', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-honey-pot text-amber-400 mr-1"></i> Salsa Soya-Miel</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Soya-Miel', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-xs text-gray-300"><i class="fas fa-droplet text-amber-700 mr-1"></i> Salsa Soya</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$800</span>
+                                <button onclick="addToCart('Salsa Soya', 800)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                        <!-- Adicionales -->
+                        <li class="flex justify-between items-center border-t border-slate-700 pt-2 mt-2">
+                            <span class="text-xs text-gray-100 font-bold">Wasabi y Jengibre</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold text-xs">$600</span>
+                                <button onclick="addToCart('Wasabi y Jengibre', 600)" class="bg-slate-700 text-white w-5 h-5 rounded-full flex items-center justify-center click-shrink"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                 <!-- BEBIDAS -->
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 md:col-span-2">
+                    <h3 class="text-xl text-blue-400 mb-3">BEBIDAS (Lata) <span class="text-gold font-bold">$1.000</span></h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="addToCart('Coca-Cola', 1000)" class="bg-slate-700 hover:bg-red-600 text-white py-2 px-3 rounded-lg text-sm font-bold click-shrink flex items-center justify-center gap-2">
+                            <span>Coca-Cola</span>
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                        <button onclick="addToCart('Fanta', 1000)" class="bg-slate-700 hover:bg-orange-600 text-white py-2 px-3 rounded-lg text-sm font-bold click-shrink flex items-center justify-center gap-2">
+                            <span>Fanta</span>
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                        <button onclick="addToCart('Sprite', 1000)" class="bg-slate-700 hover:bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-bold click-shrink flex items-center justify-center gap-2">
+                            <span>Sprite</span>
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BLOQUE: VORAZ CREATIVO -->
+        <section class="mt-8">
+            <div class="flex items-center mb-4">
+                <h2 class="text-3xl text-white mr-2">VORAZ CREATIVO <span class="text-amber-400">✨</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+            <p class="text-gray-400 text-xs mb-4 italic">¿No encontraste tu antojo? Créalo aquí</p>
+
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/50 rounded-xl p-4 shadow-lg">
+
+                <!-- Precio fijo -->
+                <div class="text-center mb-4">
+                    <span class="text-gold text-2xl font-bold">$7.900</span>
+                    <p class="text-gray-400 text-xs">10 piezas personalizadas</p>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- 1. ENVOLTURA -->
+                    <div>
+                        <label class="text-amber-300 text-xs font-bold">1. Envoltura</label>
+                        <select id="creativoEnvoltura" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                            <option value="">Selecciona...</option>
+                            <option value="Frito (panko)">Frito (panko)</option>
+                            <option value="Palta">Palta</option>
+                            <option value="Queso crema">Queso crema</option>
+                            <option value="Plátano frito">Plátano frito</option>
+                            <option value="Sésamo tostado">Sésamo tostado</option>
+                            <option value="Nori">Nori</option>
+                            <option value="Solo arroz">Solo arroz</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. RELLENO 1 -->
+                    <div>
+                        <label class="text-amber-300 text-xs font-bold">2. Relleno 1</label>
+                        <select id="creativoRelleno1" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                            <option value="">Selecciona...</option>
+                            <option value="Pollo apanado">Pollo apanado</option>
+                            <option value="Camarón cocido">Camarón cocido</option>
+                            <option value="Camarón apanado">Camarón apanado</option>
+                            <option value="Kanikama">Kanikama</option>
+                            <option value="Kanikama apanado">Kanikama apanado</option>
+                            <option value="Queso crema">Queso crema</option>
+                            <option value="Palta">Palta</option>
+                            <option value="Choclo">Choclo</option>
+                            <option value="Palmito">Palmito</option>
+                            <option value="Champiñón">Champiñón</option>
+                            <option value="Plátano frito">Plátano frito</option>
+                            <option value="Cebollín">Cebollín</option>
+                            <option value="Pepino">Pepino</option>
+                            <option value="Pimentón">Pimentón</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. RELLENO 2 -->
+                    <div>
+                        <label class="text-amber-300 text-xs font-bold">3. Relleno 2</label>
+                        <select id="creativoRelleno2" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                            <option value="">Selecciona...</option>
+                            <option value="Pollo apanado">Pollo apanado</option>
+                            <option value="Camarón cocido">Camarón cocido</option>
+                            <option value="Camarón apanado">Camarón apanado</option>
+                            <option value="Kanikama">Kanikama</option>
+                            <option value="Kanikama apanado">Kanikama apanado</option>
+                            <option value="Queso crema">Queso crema</option>
+                            <option value="Palta">Palta</option>
+                            <option value="Choclo">Choclo</option>
+                            <option value="Palmito">Palmito</option>
+                            <option value="Champiñón">Champiñón</option>
+                            <option value="Plátano frito">Plátano frito</option>
+                            <option value="Cebollín">Cebollín</option>
+                            <option value="Pepino">Pepino</option>
+                            <option value="Pimentón">Pimentón</option>
+                        </select>
+                    </div>
+
+                    <!-- 4. SALSA -->
+                    <div>
+                        <label class="text-amber-300 text-xs font-bold">4. Salsa (Cobertura)</label>
+                        <select id="creativoSalsa" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                            <option value="">Selecciona...</option>
+                            <option value="Acevichada">Acevichada</option>
+                            <option value="Teriyaki">Teriyaki</option>
+                            <option value="Spicy">Spicy</option>
+                            <option value="Fuji">Fuji</option>
+                            <option value="Soya-Miel">Soya-Miel</option>
+                            <option value="Maracuyá">Maracuyá</option>
+                            <option value="Soya">Soya</option>
+                        </select>
+                    </div>
+
+                    <!-- 5. TOPPING -->
+                    <div>
+                        <label class="text-amber-300 text-xs font-bold">5. Topping (Decoración)</label>
+                        <select id="creativoTopping" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                            <option value="">Selecciona...</option>
+                            <option value="Sin topping">Sin topping</option>
+                            <option value="Hilos de camote">Hilos de camote</option>
+                            <option value="Wakame">Wakame</option>
+                            <option value="Láminas de limón">Láminas de limón</option>
+                            <option value="Maní tostado">Maní tostado</option>
+                            <option value="Sésamo">Sésamo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 mt-4">
+                    <div class="flex items-center bg-slate-700 rounded-full">
+                        <button onclick="changeQty('qtyCreativo', -1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">-</button>
+                        <input id="qtyCreativo" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                        <button onclick="changeQty('qtyCreativo', 1)" class="w-6 h-6 text-white hover:bg-slate-600 rounded-full text-sm">+</button>
+                    </div>
+                    <button onclick="addVorazCreativo()" class="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-full click-shrink font-bold flex items-center gap-1">
+                        <i class="fas fa-plus"></i> AGREGAR
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- INFORMACIÓN DE PAGO Y RETIRO -->
+        <section class="mt-12 mb-28 border-t border-slate-700 pt-8 text-center space-y-4">
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Ubicación -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <i class="fas fa-map-marker-alt text-red-500 text-2xl mb-2"></i>
+                    <h4 class="text-white font-bold uppercase mb-1">Retiro en Local</h4>
+                    <p class="text-gray-400 text-sm">San Diego 1344</p>
+                    <p class="text-slate-500 text-xs mt-1">Santiago Centro</p>
+                </div>
+
+                <!-- Delivery -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <i class="fas fa-motorcycle text-amber-500 text-2xl mb-2"></i>
+                    <h4 class="text-white font-bold uppercase mb-1">Delivery</h4>
+                    <p class="text-gray-400 text-sm">Despacho a domicilio</p>
+                    <p class="text-amber-500 text-xs font-bold mt-1">* Con costo adicional según zona</p>
+                </div>
+
+                <!-- Pagos -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <i class="fas fa-hand-holding-dollar text-green-500 text-2xl mb-2"></i>
+                    <h4 class="text-white font-bold uppercase mb-1">Formas de Pago</h4>
+                    <p class="text-gray-400 text-sm">Transferencia o Efectivo</p>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 mt-6">
+                <p class="uppercase tracking-widest mb-1">Horario de Atención</p>
+                <p class="text-white font-bold">Martes a Domingo: 12:00 a 23:00 hrs</p>
+            </div>
+
+            <!-- Redes Sociales y Contacto -->
+            <div class="flex justify-center gap-4 mt-6">
+                <a href="https://instagram.com/vorazsushi" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white px-4 py-2 rounded-full hover:scale-105 transition-transform shadow-lg">
+                    <i class="fab fa-instagram text-xl"></i>
+                    <span class="text-sm font-bold">@vorazsushi</span>
+                </a>
+                <a href="https://wa.me/56973365375" target="_blank" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-500 hover:scale-105 transition-all shadow-lg">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    <span class="text-sm font-bold">+56 9 7336 5375</span>
+                </a>
+            </div>
+
+            <p class="text-[10px] text-slate-700 mt-8">© 2025 VORAZ Sushi Fusión</p>
+        </section>
+
+    </div>
+
+    <!-- CART FLOAT (BARRA INFERIOR FLOTANTE) -->
+    <div id="cartBar" class="cart-float fixed bottom-4 right-4 z-40">
+        <button onclick="openCartDrawer()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-5 rounded-full shadow-2xl flex items-center gap-3 click-shrink border-2 border-amber-400">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span class="text-sm">VER CARRITO</span>
+            <span id="cartCount" class="bg-white text-amber-600 text-sm font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+            <span class="text-white font-bold text-sm">|</span>
+            <span id="totalPrice" class="text-white font-bold text-sm">$0</span>
+        </button>
+    </div>
+
+    <!-- OVERLAY OSCURO (cierra el drawer al hacer click) -->
+    <div id="cartOverlay" class="cart-overlay fixed inset-0 bg-black/40 z-40" onclick="closeCartDrawer()"></div>
+
+    <!-- DRAWER DEL CARRITO -->
+    <div id="cartDrawer" class="cart-drawer fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 z-50 shadow-2xl flex flex-col">
+        <!-- Header del Drawer -->
+        <div class="bg-slate-800 p-4 border-b border-slate-700 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-shopping-cart text-amber-400 text-xl"></i>
+                <h3 class="text-xl text-white font-bold">Mi Pedido</h3>
+            </div>
+            <button onclick="closeCartDrawer()" class="text-gray-400 hover:text-white text-2xl click-shrink">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Slider de tipo de entrega -->
+        <div class="bg-slate-800/50 p-4 border-b border-slate-700">
+            <p class="text-gray-400 text-xs mb-2 text-center">Tipo de entrega</p>
+            <div class="relative bg-slate-700 rounded-full p-1 flex items-center h-10">
+                <!-- Indicador deslizante -->
+                <div id="sliderIndicator" class="absolute h-8 bg-amber-500 rounded-full transition-all duration-300 ease-out" style="width: 33.33%; left: 33.33%;"></div>
+                <!-- Opciones -->
+                <button onclick="selectDeliveryType('tienda')" class="flex-1 z-10 h-full rounded-full flex items-center justify-center gap-1 transition-colors cursor-pointer">
+                    <i id="iconTienda" class="fas fa-store text-xs text-gray-300"></i>
+                    <span id="labelTienda" class="text-xs font-bold text-gray-300">Retiro</span>
+                </button>
+                <div id="middleOption" class="flex-1 z-10 h-full rounded-full flex items-center justify-center">
+                    <span id="labelMedio" class="text-xs text-white font-bold">Selecciona</span>
+                </div>
+                <button onclick="selectDeliveryType('delivery')" class="flex-1 z-10 h-full rounded-full flex items-center justify-center gap-1 transition-colors cursor-pointer">
+                    <i id="iconDelivery" class="fas fa-motorcycle text-xs text-gray-300"></i>
+                    <span id="labelDelivery" class="text-xs font-bold text-gray-300">Delivery</span>
+                </button>
+            </div>
+            <p id="deliveryNote" class="text-amber-400 text-xs mt-2 text-center hidden"></p>
+
+            <!-- Resumen compacto de dirección para Delivery -->
+            <div id="deliveryForm" class="hidden mt-3">
+                <div id="deliveryResumen" class="bg-slate-700/50 rounded-lg p-2 flex items-center justify-between">
+                    <div class="flex items-center gap-2 flex-1 min-w-0">
+                        <i class="fas fa-map-marker-alt text-amber-400 text-sm"></i>
+                        <span id="deliveryResumenText" class="text-gray-300 text-xs truncate">Sin dirección</span>
+                    </div>
+                    <button onclick="openDeliveryModal()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1.5 rounded-full font-bold click-shrink flex items-center gap-1">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de productos -->
+        <div id="cartItems" class="flex-grow overflow-y-auto p-4 space-y-3">
+            <!-- Los items se agregan dinamicamente -->
+        </div>
+
+        <!-- Footer con totales y botones -->
+        <div class="bg-slate-800 p-4 border-t border-slate-700 space-y-3">
+            <!-- Subtotal -->
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-400">Productos:</span>
+                <span id="cartItemCount" class="text-white">0 items</span>
+            </div>
+
+            <!-- Total -->
+            <div class="flex justify-between items-center">
+                <span class="text-lg text-white font-bold">TOTAL:</span>
+                <span id="cartTotal" class="text-2xl text-amber-400 font-bold">$0</span>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex gap-2 pt-2">
+                <button onclick="clearCart()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 click-shrink">
+                    <i class="fas fa-trash-alt"></i>
+                    VACIAR
+                </button>
+                <button onclick="checkout()" class="flex-[2] bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 click-shrink">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    ENVIAR PEDIDO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica del Carrito
+        let cart = [];
+        let deliveryType = null; // null = no seleccionado, 'tienda' o 'delivery'
+        const phoneNumber = "56973365375"; // TU NÚMERO
+
+        // Estado de tipo de gyosas (frita por defecto)
+        let gyosaTipos = {
+            cerdo: 'frita',
+            pollo: 'frita',
+            camaron: 'frita'
+        };
+
+        // Función para seleccionar tipo de gyosa (frita/vapor)
+        function selectGyosaTipo(gyosa, tipo) {
+            gyosaTipos[gyosa] = tipo;
+            const btnFrita = document.getElementById(`btnGyosa${gyosa.charAt(0).toUpperCase() + gyosa.slice(1)}Frita`);
+            const btnVapor = document.getElementById(`btnGyosa${gyosa.charAt(0).toUpperCase() + gyosa.slice(1)}Vapor`);
+
+            if (tipo === 'frita') {
+                btnFrita.classList.add('bg-amber-500', 'text-white');
+                btnFrita.classList.remove('text-gray-400');
+                btnVapor.classList.remove('bg-amber-500', 'text-white');
+                btnVapor.classList.add('text-gray-400');
+            } else {
+                btnVapor.classList.add('bg-amber-500', 'text-white');
+                btnVapor.classList.remove('text-gray-400');
+                btnFrita.classList.remove('bg-amber-500', 'text-white');
+                btnFrita.classList.add('text-gray-400');
+            }
+        }
+
+        // Función para agregar gyosa con tipo de cocción
+        function addGyosa(nombre, precio, inputId, gyosaKey) {
+            const input = document.getElementById(inputId);
+            const qty = parseInt(input.value) || 1;
+            const tipo = gyosaTipos[gyosaKey] === 'frita' ? 'Frita' : 'Al Vapor';
+            const itemName = `Gyosa ${nombre} (${tipo})`;
+
+            for (let i = 0; i < qty; i++) {
+                addToCart(itemName, precio);
+            }
+            input.value = 1;
+        }
+
+        // Funciones para selector de cantidad
+        function changeQty(inputId, delta) {
+            const input = document.getElementById(inputId);
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, Math.min(10, val + delta));
+            input.value = val;
+        }
+
+        function addWithQty(name, price, inputId) {
+            const input = document.getElementById(inputId);
+            const qty = parseInt(input.value) || 1;
+            for (let i = 0; i < qty; i++) {
+                addToCart(name, price);
+            }
+            input.value = 1; // Reset
+        }
+
+        // Función para agregar roll con salsa
+        function addRollWithSalsa(rollName, price, salsaSelectId) {
+            const salsa = document.getElementById(salsaSelectId).value;
+            const itemName = `${rollName} (Salsa ${salsa})`;
+            addToCart(itemName, price);
+        }
+
+        // Funciones para agregar combos
+        function addComboDuo() {
+            const roll1 = document.getElementById('duoRoll1').value;
+            const roll2 = document.getElementById('duoRoll2').value;
+
+            if (!roll1 || !roll2) {
+                Swal.fire({
+                    title: 'Selecciona las proteinas',
+                    text: 'Debes elegir la proteina para ambos rolls',
+                    icon: 'warning',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            const comboName = `Duo Express (Frito ${roll1} + Frito ${roll2}) [Salsas: Soya, Teriyaki]`;
+            const qty = parseInt(document.getElementById('qtyDuo').value) || 1;
+            for (let i = 0; i < qty; i++) {
+                addToCart(comboName, 7500);
+            }
+
+            // Limpiar selects
+            document.getElementById('duoRoll1').value = '';
+            document.getElementById('duoRoll2').value = '';
+            document.getElementById('qtyDuo').value = 1;
+        }
+
+        function addComboMix() {
+            const frito = document.getElementById('mixFrito').value;
+            const california = document.getElementById('mixCalifornia').value;
+            const salsaPremium = document.getElementById('mixSalsa').value;
+
+            if (!frito || !california || !salsaPremium) {
+                Swal.fire({
+                    title: 'Completa tu combo',
+                    text: 'Debes elegir la proteina para el frito, el california y tu salsa premium gratis',
+                    icon: 'warning',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            const comboName = `Mix Degustacion (Frito ${frito} + California ${california}) [Salsas: Soya, Teriyaki, ${salsaPremium}]`;
+            const qty = parseInt(document.getElementById('qtyMix').value) || 1;
+            for (let i = 0; i < qty; i++) {
+                addToCart(comboName, 7900);
+            }
+
+            // Limpiar selects
+            document.getElementById('mixFrito').value = '';
+            document.getElementById('mixCalifornia').value = '';
+            document.getElementById('mixSalsa').value = '';
+            document.getElementById('qtyMix').value = 1;
+        }
+
+        function addComboFusion() {
+            const roll1 = document.getElementById('fusionRoll1').value;
+            const roll2 = document.getElementById('fusionRoll2').value;
+            const roll3 = document.getElementById('fusionRoll3').value;
+            const salsaPremium = document.getElementById('fusionSalsa').value;
+
+            if (!roll1 || !roll2 || !roll3 || !salsaPremium) {
+                Swal.fire({
+                    title: 'Completa tu combo',
+                    text: 'Debes elegir los 3 rolls premium y tu salsa premium gratis',
+                    icon: 'warning',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            const comboName = `Experiencia Fusion (${roll1} + ${roll2} + ${roll3}) [Salsas: Soya, Teriyaki, ${salsaPremium}]`;
+            const qty = parseInt(document.getElementById('qtyFusion').value) || 1;
+            for (let i = 0; i < qty; i++) {
+                addToCart(comboName, 18900);
+            }
+
+            // Limpiar selects y resetear opciones
+            document.getElementById('fusionRoll1').value = '';
+            document.getElementById('fusionRoll2').value = '';
+            document.getElementById('fusionRoll3').value = '';
+            document.getElementById('fusionSalsa').value = '';
+            document.getElementById('qtyFusion').value = 1;
+            updateFusionOptions();
+        }
+
+        // Actualizar opciones de Experiencia Fusion para evitar repetidos
+        function updateFusionOptions() {
+            const select1 = document.getElementById('fusionRoll1');
+            const select2 = document.getElementById('fusionRoll2');
+            const select3 = document.getElementById('fusionRoll3');
+
+            const val1 = select1.value;
+            const val2 = select2.value;
+            const val3 = select3.value;
+
+            const allRolls = ['Kani Volcan', 'Pollo Fuji', 'Tropical Fire', 'Inka Real', 'Citrus Fresh', 'Ocean Wakame'];
+
+            // Para cada select, deshabilitar las opciones ya seleccionadas en otros
+            [select1, select2, select3].forEach((select, idx) => {
+                const otherValues = [val1, val2, val3].filter((v, i) => i !== idx && v !== '');
+
+                Array.from(select.options).forEach(option => {
+                    if (option.value === '') return; // Skip placeholder
+                    option.disabled = otherValues.includes(option.value);
+                });
+            });
+        }
+
+        // Agregar event listeners a los selects de fusion
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('fusionRoll1').addEventListener('change', updateFusionOptions);
+            document.getElementById('fusionRoll2').addEventListener('change', updateFusionOptions);
+            document.getElementById('fusionRoll3').addEventListener('change', updateFusionOptions);
+
+        });
+
+        // Función para agregar Voraz Creativo al carrito
+        function addVorazCreativo() {
+            const envoltura = document.getElementById('creativoEnvoltura').value;
+            const relleno1 = document.getElementById('creativoRelleno1').value;
+            const relleno2 = document.getElementById('creativoRelleno2').value;
+            const salsa = document.getElementById('creativoSalsa').value;
+            const topping = document.getElementById('creativoTopping').value;
+
+            // Validaciones
+            if (!envoltura) {
+                Swal.fire({ title: 'Selecciona la envoltura', icon: 'warning', background: '#1e293b', color: '#fff' });
+                return;
+            }
+            if (!relleno1) {
+                Swal.fire({ title: 'Selecciona el relleno 1', icon: 'warning', background: '#1e293b', color: '#fff' });
+                return;
+            }
+            if (!relleno2) {
+                Swal.fire({ title: 'Selecciona el relleno 2', icon: 'warning', background: '#1e293b', color: '#fff' });
+                return;
+            }
+            if (!salsa) {
+                Swal.fire({ title: 'Selecciona la salsa', icon: 'warning', background: '#1e293b', color: '#fff' });
+                return;
+            }
+            if (!topping) {
+                Swal.fire({ title: 'Selecciona el topping', icon: 'warning', background: '#1e293b', color: '#fff' });
+                return;
+            }
+
+            // Construir nombre descriptivo
+            const itemName = `Voraz Creativo: Env. ${envoltura} + ${relleno1}/${relleno2} | Salsa: ${salsa} | Top: ${topping}`;
+
+            const qty = parseInt(document.getElementById('qtyCreativo').value) || 1;
+            for (let i = 0; i < qty; i++) {
+                addToCart(itemName, 7900);
+            }
+
+            // Limpiar formulario
+            document.getElementById('creativoEnvoltura').value = '';
+            document.getElementById('creativoRelleno1').value = '';
+            document.getElementById('creativoRelleno2').value = '';
+            document.getElementById('creativoSalsa').value = '';
+            document.getElementById('creativoTopping').value = '';
+            document.getElementById('qtyCreativo').value = 1;
+        }
+
+        // Función del slider de entrega
+        function selectDeliveryType(type) {
+            deliveryType = type;
+            const slider = document.getElementById('sliderIndicator');
+            const labelTienda = document.getElementById('labelTienda');
+            const labelDelivery = document.getElementById('labelDelivery');
+            const iconTienda = document.getElementById('iconTienda');
+            const iconDelivery = document.getElementById('iconDelivery');
+            const middleOption = document.getElementById('middleOption');
+            const note = document.getElementById('deliveryNote');
+            const deliveryForm = document.getElementById('deliveryForm');
+
+            // Ocultar opción del medio después de seleccionar
+            middleOption.classList.add('hidden');
+
+            if (type === 'tienda') {
+                slider.style.left = '0%';
+                slider.style.width = '50%';
+                labelTienda.classList.remove('text-gray-300');
+                labelTienda.classList.add('text-white');
+                iconTienda.classList.remove('text-gray-300');
+                iconTienda.classList.add('text-white');
+                labelDelivery.classList.remove('text-white');
+                labelDelivery.classList.add('text-gray-300');
+                iconDelivery.classList.remove('text-white');
+                iconDelivery.classList.add('text-gray-300');
+                note.textContent = 'Retiro en: San Diego 1344, Santiago Centro';
+                note.classList.remove('hidden');
+                deliveryForm.classList.add('hidden');
+            } else {
+                slider.style.left = '50%';
+                slider.style.width = '50%';
+                labelDelivery.classList.remove('text-gray-300');
+                labelDelivery.classList.add('text-white');
+                iconDelivery.classList.remove('text-gray-300');
+                iconDelivery.classList.add('text-white');
+                labelTienda.classList.remove('text-white');
+                labelTienda.classList.add('text-gray-300');
+                iconTienda.classList.remove('text-white');
+                iconTienda.classList.add('text-gray-300');
+                note.textContent = 'Costo de envio segun zona';
+                note.classList.remove('hidden');
+                deliveryForm.classList.remove('hidden');
+
+                // Abrir modal automáticamente si no hay dirección guardada
+                const resumenText = document.getElementById('deliveryResumenText').textContent;
+                if (resumenText === 'Sin dirección') {
+                    setTimeout(() => openDeliveryModal(), 300);
+                }
+            }
+        }
+
+        // Funciones del Drawer
+        function openCartDrawer() {
+            document.getElementById('cartDrawer').classList.add('open');
+            document.getElementById('cartOverlay').classList.add('open');
+            renderCartItems();
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cartDrawer').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('open');
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price, id: Date.now() + Math.random() });
+            updateCartUI();
+
+            // Feedback visual suave
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: false,
+                background: '#334155',
+                color: '#fff'
+            });
+            Toast.fire({
+                icon: 'success',
+                title: `${name} agregado`
+            });
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItems');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-gray-500">
+                        <i class="fas fa-shopping-cart text-6xl mb-4 opacity-30"></i>
+                        <p class="text-lg">Tu carrito esta vacio</p>
+                        <p class="text-sm">Agrega productos para comenzar</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Agrupar items por nombre
+            const grouped = {};
+            cart.forEach(item => {
+                if (!grouped[item.name]) {
+                    grouped[item.name] = { items: [], price: item.price };
+                }
+                grouped[item.name].items.push(item);
+            });
+
+            let html = '';
+            for (const [name, data] of Object.entries(grouped)) {
+                const quantity = data.items.length;
+                const subtotal = quantity * data.price;
+                const formattedPrice = data.price.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+                const formattedSubtotal = subtotal.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+
+                html += `
+                    <div class="cart-item bg-slate-800 rounded-lg p-3 border border-slate-700">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <h4 class="text-white font-bold text-sm">${name}</h4>
+                                <p class="text-gray-400 text-xs">${formattedPrice} c/u</p>
+                            </div>
+                            <span class="text-amber-400 font-bold">${formattedSubtotal}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-700">
+                            <div class="flex items-center gap-2">
+                                <button onclick="removeOneItem('${name}')" class="bg-slate-700 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center click-shrink">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span class="text-white font-bold w-8 text-center">${quantity}</span>
+                                <button onclick="addToCart('${name}', ${data.price}); renderCartItems();" class="bg-slate-700 hover:bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center click-shrink">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                            <button onclick="removeAllOfItem('${name}')" class="text-red-400 hover:text-red-300 text-xs flex items-center gap-1 click-shrink">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function removeOneItem(name) {
+            const index = cart.findIndex(item => item.name === name);
+            if (index > -1) {
+                cart.splice(index, 1);
+                updateCartUI();
+                renderCartItems();
+            }
+        }
+
+        function removeAllOfItem(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartUI();
+            renderCartItems();
+        }
+
+        function updateCartUI() {
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const formattedTotal = total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+
+            // Actualizar barra flotante
+            document.getElementById('totalPrice').innerText = formattedTotal;
+            document.getElementById('cartCount').innerText = cart.length;
+
+            // Actualizar drawer
+            document.getElementById('cartTotal').innerText = formattedTotal;
+            document.getElementById('cartItemCount').innerText = cart.length + ' items';
+
+            const cartBar = document.getElementById('cartBar');
+            if (cart.length > 0) {
+                cartBar.classList.add('visible');
+            } else {
+                cartBar.classList.remove('visible');
+            }
+        }
+
+        function clearCart() {
+            if(cart.length === 0) return;
+            Swal.fire({
+                title: 'Vaciar carrito?',
+                text: "Se borraran tus productos seleccionados",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Si, vaciar',
+                cancelButtonText: 'Cancelar',
+                background: '#1e293b',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    cart = [];
+                    updateCartUI();
+                    renderCartItems();
+                }
+            });
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                Swal.fire({
+                    title: 'Carrito vacio',
+                    text: 'Agrega productos antes de enviar el pedido',
+                    icon: 'info',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            if (!deliveryType) {
+                Swal.fire({
+                    title: 'Selecciona tipo de entrega',
+                    text: 'Elige entre Retiro en tienda o Delivery',
+                    icon: 'info',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            // Validar campos de delivery
+            if (deliveryType === 'delivery') {
+                const calle = document.getElementById('inputCalle').value.trim();
+                const comuna = document.getElementById('inputComuna').value.trim();
+
+                if (!calle || !comuna) {
+                    Swal.fire({
+                        title: 'Completa la direccion',
+                        text: 'Debes ingresar calle/número y comuna para el delivery',
+                        icon: 'warning',
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                    return;
+                }
+            }
+
+            // Agrupar items
+            const counts = {};
+            const prices = {};
+            cart.forEach(x => {
+                counts[x.name] = (counts[x.name] || 0) + 1;
+                prices[x.name] = x.price;
+            });
+
+            const tipoEntrega = deliveryType === 'tienda' ? 'RETIRO EN TIENDA' : 'DELIVERY';
+            let message = `Hola VORAZ, quiero hacer este pedido desde la web:\n\n*${tipoEntrega}*\n`;
+
+            // Agregar dirección si es delivery
+            if (deliveryType === 'delivery') {
+                const calle = document.getElementById('inputCalle').value.trim();
+                const depto = document.getElementById('inputDepto').value.trim();
+                const comuna = document.getElementById('inputComuna').value.trim();
+
+                message += `Direccion: ${calle}`;
+                if (depto) message += `, Depto ${depto}`;
+                message += `\nComuna: ${comuna}\nRegion Metropolitana\n`;
+            }
+            message += '\n';
+
+            // Construir lista con precios
+            for (const [name, count] of Object.entries(counts)) {
+                const subtotal = (count * prices[name]).toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+                message += `- ${count}x ${name} (${subtotal})\n`;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const formattedTotal = total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+
+            message += `\n*TOTAL: ${formattedTotal}*`;
+            message += "\n\nMe confirman el tiempo de espera? Gracias!";
+
+            // Abrir WhatsApp en nueva pestaña
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Funciones del Modal de Delivery
+        function openDeliveryModal() {
+            document.getElementById('deliveryModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function saveDeliveryAddress() {
+            const calle = document.getElementById('inputCalle').value.trim();
+            const depto = document.getElementById('inputDepto').value.trim();
+            const comuna = document.getElementById('inputComuna').value.trim();
+
+            if (!calle || !comuna) {
+                Swal.fire({
+                    title: 'Completa los campos',
+                    text: 'Calle/número y comuna son obligatorios',
+                    icon: 'warning',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            // Actualizar resumen
+            let resumen = calle;
+            if (depto) resumen += `, Depto ${depto}`;
+            resumen += `, ${comuna}`;
+
+            document.getElementById('deliveryResumenText').textContent = resumen;
+            document.getElementById('deliveryResumenText').classList.remove('text-gray-300');
+            document.getElementById('deliveryResumenText').classList.add('text-white');
+
+            closeDeliveryModal();
+        }
+    </script>
+
+    <!-- MODAL DE DIRECCIÓN DELIVERY -->
+    <div id="deliveryModal" class="delivery-modal fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div class="delivery-modal-overlay absolute inset-0 bg-black/60" onclick="closeDeliveryModal()"></div>
+        <div class="delivery-modal-content relative bg-slate-800 rounded-2xl w-full max-w-sm shadow-2xl border border-slate-700 overflow-hidden">
+            <!-- Header del Modal -->
+            <div class="bg-slate-900 p-4 flex justify-between items-center border-b border-slate-700">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-amber-400"></i>
+                    <h4 class="text-white font-bold">Dirección de Envío</h4>
+                </div>
+                <button onclick="closeDeliveryModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Formulario -->
+            <div class="p-4 space-y-3">
+                <div>
+                    <label class="text-gray-400 text-xs">Calle y número *</label>
+                    <input type="text" id="inputCalle" placeholder="Ej: Av. O'Higgins 1234" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                </div>
+                <div>
+                    <label class="text-gray-400 text-xs">Depto (opcional)</label>
+                    <input type="text" id="inputDepto" placeholder="Ej: 501" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                </div>
+                <div>
+                    <label class="text-gray-400 text-xs">Comuna *</label>
+                    <input type="text" id="inputComuna" placeholder="Ej: Santiago Centro" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none mt-1">
+                </div>
+                <div>
+                    <label class="text-gray-400 text-xs">Región</label>
+                    <input type="text" value="Región Metropolitana" disabled class="w-full bg-slate-600 border border-slate-600 rounded-lg px-3 py-2 text-gray-400 text-sm cursor-not-allowed mt-1">
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="p-4 bg-slate-900 border-t border-slate-700 flex gap-2">
+                <button onclick="closeDeliveryModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2.5 rounded-lg click-shrink">
+                    Cancelar
+                </button>
+                <button onclick="saveDeliveryAddress()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-lg click-shrink flex items-center justify-center gap-2">
+                    <i class="fas fa-check"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
