@@ -109,6 +109,14 @@ Fonts: **Shippori Mincho** (display / headings — `h1,h2,h3`) and **Zen Kaku Go
 - Changing a Fusión combo's price means editing **both** the card's displayed prices
   (full + discounted) and the literal `fullPrice`/`discount` args in its `addCombo(...)`
   call; they must stay consistent (`fullPrice - discount = advertised price`).
+- **"Nuevo" badge** — `.badge-nuevo` (defined in the inline `<style>`) is a reusable
+  diagonal blue corner ribbon for flagging a product as new. It is universal: it works
+  on **any** product card. To apply it, add `relative` to the card's outer `<div>` class
+  list (cards already have `overflow-hidden`, which clips the ribbon ends) and insert
+  `<span class="badge-nuevo">Nuevo</span>` as that div's first child, before the `<img>`.
+  Remove the span when the product is no longer new. The ribbon is blue by deliberate
+  choice (a conventional "new" cue) — it is the one accent that intentionally departs
+  from the warm "ink & ember" palette.
 
 ## Known tech debt / not yet done
 
