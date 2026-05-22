@@ -4291,10 +4291,12 @@
         // PERSISTENCIA DEL CARRITO (localStorage)
         // ============================================
         const CART_STORAGE_KEY = 'voraz_cart_v1';
+        const CART_TTL_MS = 10 * 60 * 1000; // El carrito guardado dura 10 minutos
 
         function saveCart() {
             try {
-                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+                const payload = { items: cart, savedAt: Date.now() };
+                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(payload));
             } catch (e) {
                 console.warn('No se pudo guardar el carrito:', e);
             }
@@ -4305,7 +4307,20 @@
                 const stored = localStorage.getItem(CART_STORAGE_KEY);
                 if (!stored) return [];
                 const parsed = JSON.parse(stored);
-                return Array.isArray(parsed) ? parsed : [];
+
+                // Formato antiguo (array directo): se descarta
+                if (Array.isArray(parsed) || !parsed || !Array.isArray(parsed.items)) {
+                    localStorage.removeItem(CART_STORAGE_KEY);
+                    return [];
+                }
+
+                // Descartar si el carrito tiene más de 10 minutos
+                if (!parsed.savedAt || (Date.now() - parsed.savedAt) > CART_TTL_MS) {
+                    localStorage.removeItem(CART_STORAGE_KEY);
+                    return [];
+                }
+
+                return parsed.items;
             } catch (e) {
                 console.warn('No se pudo cargar el carrito:', e);
                 return [];
