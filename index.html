@@ -1042,6 +1042,29 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Producto 4: Golden -->
+                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <img src="img/golden.jpeg" alt="Golden Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Golden Roll</h3>
+                            <span class="text-amber-600 font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(El Dorado)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Doblemente crujiente. Envuelto en alga nori frita, relleno con pollo, queso crema y cebollín. Coronado con más pollo y nuestras irresistibles salsas.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyGolden', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyGolden" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyGolden', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Golden Roll', 6900, 'qtyGolden')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1117,6 +1140,52 @@
                                 <button onclick="changeQty('qtyWakame', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
                             </div>
                             <button onclick="addWithQty('Ocean Wakame', 6900, 'qtyWakame')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 4 - Ocaso Roll -->
+                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <img src="img/ocaso.jpeg" alt="Ocaso Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Ocaso Roll</h3>
+                            <span class="text-amber-600 font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(El Viaje de Sabores)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Un viaje de sabores. Envuelto en plátano frito, relleno con camarón, queso crema y cebollín. Terminado con un topping crocante y bañado en nuestra salsa de maracuyá.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyOcaso', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyOcaso" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyOcaso', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Ocaso Roll', 6900, 'qtyOcaso')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 5 - Pacific Roll -->
+                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <img src="img/pacific.jpeg" alt="Pacific Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Pacific Roll</h3>
+                            <span class="text-amber-600 font-bold">$7.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(Fresco e Intenso)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Ideal para los amantes del mar. Envuelto en ciboulette y un toque de merkén, relleno con camarón crujiente, lechuga y palta. Coronado con una porción de ceviche.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyPacific', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyPacific" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyPacific', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Pacific Roll', 7900, 'qtyPacific')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
                                 <i class="fas fa-plus"></i> AGREGAR
                             </button>
                         </div>
@@ -1574,9 +1643,11 @@
                                     <option value="Kani Volcan">Kani Volcan</option>
                                     <option value="Pollo Fuji">Pollo Fuji</option>
                                     <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Golden Roll">Golden Roll</option>
                                     <option value="Inka Real">Inka Real</option>
                                     <option value="Pasión Voraz">Pasión Voraz</option>
                                     <option value="Ocean Wakame">Ocean Wakame</option>
+                                    <option value="Ocaso Roll">Ocaso Roll</option>
                                 </select>
                             </div>
                             <div>
@@ -1587,9 +1658,11 @@
                                     <option value="Kani Volcan">Kani Volcan</option>
                                     <option value="Pollo Fuji">Pollo Fuji</option>
                                     <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Golden Roll">Golden Roll</option>
                                     <option value="Inka Real">Inka Real</option>
                                     <option value="Pasión Voraz">Pasión Voraz</option>
                                     <option value="Ocean Wakame">Ocean Wakame</option>
+                                    <option value="Ocaso Roll">Ocaso Roll</option>
                                 </select>
                             </div>
                         </div>
@@ -1641,9 +1714,11 @@
                                     <option value="Kani Volcan">Kani Volcan</option>
                                     <option value="Pollo Fuji">Pollo Fuji</option>
                                     <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Golden Roll">Golden Roll</option>
                                     <option value="Inka Real">Inka Real</option>
                                     <option value="Pasión Voraz">Pasión Voraz</option>
                                     <option value="Ocean Wakame">Ocean Wakame</option>
+                                    <option value="Ocaso Roll">Ocaso Roll</option>
                                 </select>
                             </div>
                             <div>
@@ -1654,9 +1729,11 @@
                                     <option value="Kani Volcan">Kani Volcan</option>
                                     <option value="Pollo Fuji">Pollo Fuji</option>
                                     <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Golden Roll">Golden Roll</option>
                                     <option value="Inka Real">Inka Real</option>
                                     <option value="Pasión Voraz">Pasión Voraz</option>
                                     <option value="Ocean Wakame">Ocean Wakame</option>
+                                    <option value="Ocaso Roll">Ocaso Roll</option>
                                 </select>
                             </div>
                             <div>
@@ -1667,9 +1744,11 @@
                                     <option value="Kani Volcan">Kani Volcan</option>
                                     <option value="Pollo Fuji">Pollo Fuji</option>
                                     <option value="Tropical Fire">Tropical Fire</option>
+                                    <option value="Golden Roll">Golden Roll</option>
                                     <option value="Inka Real">Inka Real</option>
                                     <option value="Pasión Voraz">Pasión Voraz</option>
                                     <option value="Ocean Wakame">Ocean Wakame</option>
+                                    <option value="Ocaso Roll">Ocaso Roll</option>
                                 </select>
                             </div>
                         </div>
@@ -3468,6 +3547,10 @@
                 img: 'img/tropical.jpeg',
                 desc: 'Plátano maduro, tocineta ahumada, queso crema, pollo crujiente y salsa anguila.'
             },
+            'Golden Roll': {
+                img: 'img/golden.jpeg',
+                desc: 'Alga nori frita, pollo, queso crema y cebollín, coronado con más pollo y salsas.'
+            },
             'Inka Real': {
                 img: 'img/inka.jpeg',
                 desc: 'Camarón frito, queso crema, palta, hilos de camote y salsa acevichada.'
@@ -3479,6 +3562,10 @@
             'Ocean Wakame': {
                 img: 'img/ocean.jpeg',
                 desc: 'Camarón crocante, queso crema, palta, algas wakame y salsa ponzu.'
+            },
+            'Ocaso Roll': {
+                img: 'img/ocaso.jpeg',
+                desc: 'Plátano frito, camarón, queso crema y cebollín, topping crocante y salsa de maracuyá.'
             }
         };
 
