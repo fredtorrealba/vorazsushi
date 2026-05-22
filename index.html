@@ -3423,6 +3423,41 @@
             document.getElementById('qtyMix').value = 1;
         }
 
+        // Agrega un combo guardando su precio completo + el ahorro,
+        // para que el descuento se vea reflejado (igual que las salsas premium)
+        function addCombo(name, fullPrice, discount, qty) {
+            const cantidad = parseInt(qty) || 1;
+            for (let i = 0; i < cantidad; i++) {
+                cart.push({
+                    name: name,
+                    price: fullPrice,
+                    isCombo: true,
+                    comboDiscount: discount,
+                    id: Date.now() + Math.random()
+                });
+            }
+            updateCartUI();
+            hapticFeedback('success');
+            animateCartButton();
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#1a1512',
+                color: '#f3ebdb'
+            });
+            Toast.fire({ icon: 'success', title: `${name} agregado` });
+        }
+
+        // Suma el ahorro total de todos los combos en el carrito
+        function calcularDescuentoCombos() {
+            return cart
+                .filter(item => item.isCombo)
+                .reduce((sum, item) => sum + (item.comboDiscount || 0), 0);
+        }
+
         function addComboFusionX2() {
             const roll1 = document.getElementById('fusionX2Roll1').value;
             const roll2 = document.getElementById('fusionX2Roll2').value;
@@ -3441,9 +3476,7 @@
 
             const comboName = `Experiencia Fusion x2 (${roll1} + ${roll2}) [Salsas: Soya, Teriyaki, ${salsaPremium}]`;
             const qty = parseInt(document.getElementById('qtyFusionX2').value) || 1;
-            for (let i = 0; i < qty; i++) {
-                addToCart(comboName, 12900);
-            }
+            addCombo(comboName, 14400, 1500, qty);
 
             // Limpiar selects
             document.getElementById('fusionX2Roll1').value = '';
@@ -3471,9 +3504,7 @@
 
             const comboName = `Experiencia Fusion x3 (${roll1} + ${roll2} + ${roll3}) [Salsas: Soya, Teriyaki, ${salsaPremium}]`;
             const qty = parseInt(document.getElementById('qtyFusion').value) || 1;
-            for (let i = 0; i < qty; i++) {
-                addToCart(comboName, 18900);
-            }
+            addCombo(comboName, 21300, 2400, qty);
 
             // Limpiar selects y resetear opciones
             document.getElementById('fusionRoll1').value = '';
@@ -3839,10 +3870,15 @@
             const precioConDescuento = calcularPrecioSalsasPremium();
             const descuentoSalsas = precioSinDescuento - precioConDescuento;
 
+            // Calcular ahorro total de combos para mostrar
+            const descuentoCombos = calcularDescuentoCombos();
+
             let html = '';
             for (const [name, data] of Object.entries(grouped)) {
                 const quantity = data.items.length;
                 const isPremiumSalsa = data.items[0]?.isPremiumSalsa;
+                const isCombo = data.items[0]?.isCombo;
+                const comboDiscount = data.items[0]?.comboDiscount || 0;
                 const subtotal = quantity * data.price;
                 const formattedPrice = data.price.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
                 const formattedSubtotal = subtotal.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
@@ -3850,7 +3886,9 @@
                 // Función de agregar dependiendo del tipo
                 const addFunction = isPremiumSalsa
                     ? `addSalsaPremium('${name}'); renderCartItems();`
-                    : `addToCart('${name}', ${data.price}); renderCartItems();`;
+                    : isCombo
+                        ? `addCombo('${name}', ${data.price}, ${comboDiscount}, 1); renderCartItems();`
+                        : `addToCart('${name}', ${data.price}); renderCartItems();`;
 
                 html += `
                     <div class="cart-item-card">
@@ -3901,6 +3939,25 @@
                 `;
             }
 
+            // Mostrar ahorro de combos Experiencia Fusion si aplica
+            if (descuentoCombos > 0) {
+                const formattedDescCombo = descuentoCombos.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+                html += `
+                    <div class="bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-xl p-3 border border-emerald-500/30 mt-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-200/30 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                        <div class="flex justify-between items-center relative">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-tag text-white text-xs"></i>
+                                </div>
+                                <span class="text-emerald-400 text-sm font-medium">Descuento Combos</span>
+                            </div>
+                            <span class="text-emerald-600 font-bold">-${formattedDescCombo}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
             container.innerHTML = html;
         }
 
@@ -3928,7 +3985,7 @@
             // Calcular total de salsas premium con precio inteligente
             const totalSalsasPremium = calcularPrecioSalsasPremium();
 
-            const total = totalOtros + totalSalsasPremium;
+            const total = totalOtros + totalSalsasPremium - calcularDescuentoCombos();
             const formattedTotal = total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
 
             // Actualizar barra flotante
@@ -4050,11 +4107,18 @@
                 message += `- Descuento Salsas Premium (-${formattedDescuento})\n`;
             }
 
-            // Total: items normales + salsas premium con precio por pares
+            // Descuento por combos Experiencia Fusion
+            const descuentoCombos = calcularDescuentoCombos();
+            if (descuentoCombos > 0) {
+                const formattedDescCombo = descuentoCombos.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+                message += `- Descuento Combos (-${formattedDescCombo})\n`;
+            }
+
+            // Total: items normales + salsas premium con precio por pares - descuento combos
             const totalOtros = cart
                 .filter(item => !item.isPremiumSalsa)
                 .reduce((sum, item) => sum + item.price, 0);
-            const total = totalOtros + calcularPrecioSalsasPremium();
+            const total = totalOtros + calcularPrecioSalsasPremium() - descuentoCombos;
             const formattedTotal = total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
 
             message += `\n*TOTAL: ${formattedTotal}*`;
