@@ -1,0 +1,28 @@
+{
+  "name": "VORAZ Sushi — Menú Digital",
+  "short_name": "VORAZ Sushi",
+  "description": "Menú digital y pedidos de VORAZ Sushi: Hot Rolls, Fresh Rolls, Pokes y combos en Santiago.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "background_color": "#110d0b",
+  "theme_color": "#1a1512",
+  "categories": ["food", "shopping"],
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>VORAZ Sushi | Menú Digital - Santiago</title>
 
     <!-- SEO Meta Tags -->
@@ -16,15 +16,19 @@
     <meta property="og:url" content="https://vorazsushi.cl/">
     <meta property="og:title" content="VORAZ Sushi | Menú Digital">
     <meta property="og:description" content="Sabor fusión, técnica experta. Hot Rolls, Fresh Rolls, Pokes y más. Delivery en Santiago.">
-    <meta property="og:image" content="img/logo.png">
+    <meta property="og:image" content="https://vorazsushi.cl/img/passion.jpeg">
+    <meta property="og:image:alt" content="VORAZ Sushi — rolls de autor en Santiago">
+    <meta property="og:locale" content="es_CL">
+    <meta property="og:site_name" content="VORAZ Sushi">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="VORAZ Sushi | Menú Digital">
     <meta name="twitter:description" content="Sabor fusión, técnica experta. Hot Rolls, Fresh Rolls, Pokes y más.">
+    <meta name="twitter:image" content="https://vorazsushi.cl/img/passion.jpeg">
 
     <!-- Theme Color for browsers -->
-    <meta name="theme-color" content="#f59e0b">
+    <meta name="theme-color" content="#1a1512">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Favicon -->
@@ -36,11 +40,36 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Re-tematiza la paleta de Tailwind hacia un esquema cálido "tinta y brasa"
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50:'#f6f1ea',100:'#ece3d5',200:'#d9ccba',300:'#bdac98',
+                            400:'#9a8b78',500:'#75685a',600:'#544b40',700:'#3a332c',
+                            800:'#241f1b',900:'#1a1512',950:'#110d0b'
+                        },
+                        amber: {
+                            50:'#fbf3e0',100:'#f6e6bd',200:'#f0d089',300:'#ecbb56',
+                            400:'#e6a838',500:'#d8922a',600:'#bd7522',700:'#9a5a1e',
+                            800:'#7c4820',900:'#673c1e',950:'#3b1f0e'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Shippori Mincho"','serif'],
+                        body: ['"Zen Kaku Gothic New"','sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Fuentes Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!-- SweetAlert2 para notificaciones -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -54,14 +83,31 @@
             scroll-behavior: smooth;
         }
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #020617;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            background-color: #110d0b;
+            background-image:
+                radial-gradient(820px 520px at 16% -10%, rgba(216,146,42,0.12), transparent 70%),
+                radial-gradient(680px 460px at 94% 2%, rgba(214,73,47,0.09), transparent 72%),
+                radial-gradient(1100px 760px at 50% 116%, rgba(216,146,42,0.06), transparent 70%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ded2c0;
             -webkit-tap-highlight-color: transparent;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            mix-blend-mode: overlay;
         }
 
         /* Modern Focus States for Accessibility */
         button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-            outline: 2px solid #f59e0b;
+            outline: 2px solid #d8922a;
             outline-offset: 2px;
         }
 
@@ -98,7 +144,7 @@
 
         /* Skeleton Loading */
         .skeleton {
-            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background: linear-gradient(90deg, #241f1b 25%, #322b25 50%, #241f1b 75%);
             background-size: 200% 100%;
             animation: skeleton-loading 1.5s infinite;
         }
@@ -115,7 +161,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #f59e0b;
+            background: #d8922a;
             color: white;
             border: none;
             cursor: pointer;
@@ -123,7 +169,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 35;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 12px rgba(216, 146, 42, 0.4);
         }
         .scroll-top-btn.visible {
             opacity: 1;
@@ -131,7 +177,7 @@
         }
         .scroll-top-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.5);
+            box-shadow: 0 6px 16px rgba(216, 146, 42, 0.5);
         }
 
         /* Better Button Feedback */
@@ -162,42 +208,42 @@
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-color: #1e293b;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-color: #241f1b;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a8b78' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 14px;
-            border: 2px solid #475569;
+            border: 2px solid #473e36;
             border-radius: 12px;
             padding: 10px 36px 10px 14px;
             font-size: 13px;
             font-weight: 500;
-            color: #e2e8f0;
+            color: #e6dcc9;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         .select-modern:hover {
-            border-color: #64748b;
-            background-color: #334155;
+            border-color: #6b5f52;
+            background-color: #322b25;
         }
         .select-modern:focus {
             outline: none;
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 1px 2px rgba(0, 0, 0, 0.2);
-            background-color: #1e293b;
+            border-color: #d8922a;
+            box-shadow: 0 0 0 3px rgba(216, 146, 42, 0.15), 0 1px 2px rgba(0, 0, 0, 0.2);
+            background-color: #241f1b;
         }
         .select-modern:focus:hover {
-            border-color: #f59e0b;
+            border-color: #d8922a;
         }
         .select-modern option {
             padding: 12px;
             font-weight: 500;
-            background-color: #1e293b;
-            color: #e2e8f0;
+            background-color: #241f1b;
+            color: #e6dcc9;
         }
         .select-modern option:disabled {
-            color: #64748b;
+            color: #6b5f52;
         }
         /* Green variant for salsas */
         .select-modern-green:focus {
@@ -213,7 +259,7 @@
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: #94a3b8;
+            color: #9a8b78;
             pointer-events: none;
             z-index: 1;
         }
@@ -229,13 +275,13 @@
         .custom-dropdown-trigger {
             appearance: none;
             width: 100%;
-            background-color: #1e293b;
-            border: 2px solid #475569;
+            background-color: #241f1b;
+            border: 2px solid #473e36;
             border-radius: 10px;
             padding: 8px 30px 8px 12px;
             font-size: 12px;
             font-weight: 500;
-            color: #e2e8f0;
+            color: #e6dcc9;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -251,7 +297,7 @@
             height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-top: 5px solid #94a3b8;
+            border-top: 5px solid #9a8b78;
             transition: transform 0.3s ease;
             position: absolute;
             right: 14px;
@@ -262,23 +308,23 @@
             transform: translateY(-50%) rotate(180deg);
         }
         .custom-dropdown-trigger:hover {
-            border-color: #64748b;
-            background-color: #334155;
+            border-color: #6b5f52;
+            background-color: #322b25;
         }
         .custom-dropdown.open .custom-dropdown-trigger {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+            border-color: #d8922a;
+            box-shadow: 0 0 0 2px rgba(216, 146, 42, 0.15);
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             border-bottom-color: transparent;
         }
         .custom-dropdown-trigger .placeholder {
-            color: #94a3b8;
+            color: #9a8b78;
         }
         .custom-dropdown-menu {
             position: fixed;
-            background: #1e293b;
-            border: 2px solid #f59e0b;
+            background: #241f1b;
+            border: 2px solid #d8922a;
             border-top: none;
             border-radius: 0 0 10px 10px;
             max-height: 0;
@@ -297,24 +343,24 @@
             padding: 8px 12px;
             font-size: 12px;
             font-weight: 500;
-            color: #e2e8f0;
+            color: #e6dcc9;
             cursor: pointer;
             transition: all 0.15s ease;
             display: flex;
             align-items: center;
             gap: 6px;
             white-space: nowrap;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #322b25;
         }
         .custom-dropdown-item:last-child {
             border-bottom: none;
         }
         .custom-dropdown-item:hover {
-            background: #f59e0b;
+            background: #d8922a;
             color: #ffffff;
         }
         .custom-dropdown-item.selected {
-            background: #f59e0b;
+            background: #d8922a;
             color: #ffffff;
         }
         .custom-dropdown-item.selected::before {
@@ -347,23 +393,25 @@
             width: 6px;
         }
         .custom-dropdown-menu::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: #241f1b;
             border-radius: 3px;
         }
         .custom-dropdown-menu::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #473e36;
             border-radius: 3px;
         }
         .custom-dropdown-menu::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+            background: #6b5f52;
         }
         h1, h2, h3, .title-font {
-            font-family: 'Bebas Neue', cursive;
-            letter-spacing: 0.05em;
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 700;
+            letter-spacing: 0.02em;
         }
-        .text-amber-600 { color: #f59e0b; }
-        .bg-gold { background-color: #f59e0b; }
-        .border-gold { border-color: #f59e0b; }
+        h2 { font-weight: 800; }
+        .text-amber-600 { color: #d8922a; }
+        .bg-gold { background-color: #d8922a; }
+        .border-gold { border-color: #d8922a; }
 
         /* Animaciones */
         .click-shrink:active { transform: scale(0.95); }
@@ -377,23 +425,107 @@
             bottom: 20px;
         }
 
-        /* Animación del logo */
+        /* ============ CABECERA / HERO ============ */
         .logo-container {
             animation: float 3s ease-in-out infinite;
         }
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-7px); }
         }
         .logo-glow {
-            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.3));
+            filter: drop-shadow(0 0 22px rgba(216,146,42,0.35));
             transition: all 0.3s ease;
-            border-radius: 20px;
+            border-radius: 18px;
             object-fit: cover;
         }
         .logo-glow:hover {
-            filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.5));
+            filter: drop-shadow(0 0 32px rgba(216,146,42,0.55));
             transform: scale(1.05);
+        }
+        .site-header {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 46px 20px 40px;
+            background:
+                radial-gradient(420px 280px at 50% -40%, rgba(216,146,42,0.20), transparent 70%),
+                linear-gradient(180deg, #1d1814 0%, #14100d 100%);
+            border-bottom: 1px solid #3a332c;
+        }
+        .site-header::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d8922a 50%, transparent);
+        }
+        .header-ember {
+            position: absolute;
+            top: -120px; left: 50%;
+            width: 380px; height: 380px;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(214,73,47,0.22), transparent 62%);
+            pointer-events: none;
+            filter: blur(8px);
+        }
+        .header-inner { position: relative; z-index: 1; }
+        .header-kicker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.42em;
+            text-transform: uppercase;
+            color: #b09a7f;
+        }
+        .header-kicker .rule {
+            width: 38px; height: 1px;
+            background: linear-gradient(90deg, transparent, #5a4d3e);
+        }
+        .header-kicker .rule:last-child {
+            background: linear-gradient(90deg, #5a4d3e, transparent);
+        }
+        .wordmark {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 800;
+            font-size: clamp(3.4rem, 13vw, 5.6rem);
+            line-height: 0.92;
+            letter-spacing: 0.14em;
+            margin: 16px 0 0 -0.14em;
+            color: #f3ebdb;
+            text-shadow: 0 2px 0 rgba(189,117,34,0.35), 0 0 38px rgba(216,146,42,0.28);
+        }
+        .header-tagline {
+            margin-top: 16px;
+            font-family: 'Shippori Mincho', serif;
+            font-style: italic;
+            font-size: 13px;
+            color: #9a8b78;
+        }
+        .hanko {
+            position: absolute;
+            top: 26px; right: 24px;
+            width: 52px; height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #d6492f;
+            border-radius: 10px;
+            color: #e8623f;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 26px;
+            font-weight: 700;
+            transform: rotate(-8deg);
+            opacity: 0.92;
+            box-shadow: inset 0 0 0 3px rgba(214,73,47,0.18);
+        }
+        @media (max-width: 480px) {
+            .hanko { width: 42px; height: 42px; font-size: 21px; top: 18px; right: 16px; }
         }
 
         /* Panel del carrito (Drawer) - Modern Style */
@@ -429,8 +561,8 @@
         .cart-item {
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 12px;
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #241f1b;
+            border: 1px solid #322b25;
         }
         .cart-item:hover {
             box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
@@ -444,7 +576,7 @@
         .qty-control {
             display: flex;
             align-items: center;
-            background: #334155;
+            background: #322b25;
             border-radius: 20px;
             padding: 2px;
         }
@@ -454,7 +586,7 @@
             border-radius: 50%;
             border: none;
             background: transparent;
-            color: #e2e8f0;
+            color: #e6dcc9;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -463,18 +595,18 @@
             justify-content: center;
         }
         .qty-btn:hover {
-            background: #475569;
+            background: #473e36;
         }
         .qty-btn:active {
             transform: scale(0.9);
-            background: #64748b;
+            background: #6b5f52;
         }
         .qty-value {
             width: 32px;
             text-align: center;
             font-weight: 600;
             font-size: 14px;
-            color: #f8fafc;
+            color: #f3ebdb;
         }
 
         /* Empty Cart State */
@@ -490,7 +622,7 @@
         .cart-empty-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #d8922a 0%, #bd7522 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -505,12 +637,12 @@
         .cart-empty h4 {
             font-size: 18px;
             font-weight: 600;
-            color: #f8fafc;
+            color: #f3ebdb;
             margin-bottom: 8px;
         }
         .cart-empty p {
             font-size: 14px;
-            color: #94a3b8;
+            color: #9a8b78;
         }
         @keyframes emptyCartBounce {
             0%, 100% { transform: translateY(0); }
@@ -534,15 +666,15 @@
 
         /* Cart Item Card Modern */
         .cart-item-card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #241f1b;
+            border: 1px solid #322b25;
             border-radius: 16px;
             padding: 14px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         .cart-item-card:hover {
-            border-color: #475569;
+            border-color: #473e36;
             box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
             transform: translateY(-1px);
         }
@@ -566,21 +698,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #322b25;
         }
 
         /* Cart Footer */
         .cart-footer {
-            background: linear-gradient(to top, #0f172a, #1e293b);
+            background: linear-gradient(to top, #1a1512, #241f1b);
             padding: 20px;
-            border-top: 1px solid #334155;
+            border-top: 1px solid #322b25;
         }
 
         /* Delivery Toggle Section */
         .delivery-toggle-section {
-            background: #1e293b;
+            background: #241f1b;
             padding: 16px 20px;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #322b25;
         }
 
         /* Address Card Extended */
@@ -592,7 +724,7 @@
         .address-card-icon {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #d8922a 0%, #bd7522 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -646,7 +778,7 @@
 
         /* Delivery Toggle Modern */
         .delivery-toggle {
-            background: #334155;
+            background: #322b25;
             border-radius: 12px;
             padding: 4px;
             display: flex;
@@ -655,10 +787,10 @@
         .delivery-toggle-indicator {
             position: absolute;
             height: calc(100% - 8px);
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #d8922a 0%, #bd7522 100%);
             border-radius: 10px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 2px 8px rgba(216, 146, 42, 0.3);
         }
         .delivery-toggle-btn {
             flex: 1;
@@ -667,7 +799,7 @@
             background: transparent;
             font-size: 12px;
             font-weight: 600;
-            color: #94a3b8;
+            color: #9a8b78;
             cursor: pointer;
             position: relative;
             z-index: 1;
@@ -683,14 +815,14 @@
 
         /* Address Card */
         .address-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border: 1px solid #f59e0b50;
+            background: linear-gradient(135deg, #241f1b 0%, #322b25 100%);
+            border: 1px solid #d8922a50;
             border-radius: 12px;
             padding: 12px;
             transition: all 0.2s ease;
         }
         .address-card:hover {
-            box-shadow: 0 4px 12px -2px rgba(245, 158, 11, 0.15);
+            box-shadow: 0 4px 12px -2px rgba(216, 146, 42, 0.15);
         }
 
         /* Ocultar scrollbar pero mantener funcionalidad */
@@ -755,25 +887,25 @@
             padding: 16px 14px 8px;
             font-size: 14px;
             font-weight: 500;
-            color: #f8fafc;
-            background: #1e293b;
-            border: 2px solid #475569;
+            color: #f3ebdb;
+            background: #241f1b;
+            border: 2px solid #473e36;
             border-radius: 12px;
             transition: all 0.2s ease;
             outline: none;
         }
         .input-modern:hover {
-            border-color: #64748b;
+            border-color: #6b5f52;
         }
         .input-modern:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            border-color: #d8922a;
+            box-shadow: 0 0 0 3px rgba(216, 146, 42, 0.1);
         }
         .input-modern:focus + .input-label,
         .input-modern:not(:placeholder-shown) + .input-label {
             top: 6px;
             font-size: 10px;
-            color: #f59e0b;
+            color: #d8922a;
         }
         .input-label {
             position: absolute;
@@ -781,24 +913,24 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 13px;
-            color: #94a3b8;
+            color: #9a8b78;
             pointer-events: none;
             transition: all 0.2s ease;
-            background: #1e293b;
+            background: #241f1b;
             padding: 0 4px;
         }
         .input-modern:disabled {
-            background: #0f172a;
-            color: #64748b;
+            background: #1a1512;
+            color: #6b5f52;
             cursor: not-allowed;
         }
         .input-modern:disabled + .input-label {
-            color: #64748b;
+            color: #6b5f52;
         }
 
         /* Modal Save Button */
         .modal-save-btn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #d8922a 0%, #bd7522 100%);
             color: white;
             font-weight: 600;
             font-size: 14px;
@@ -811,11 +943,11 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px -2px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 12px -2px rgba(216, 146, 42, 0.3);
         }
         .modal-save-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px -4px rgba(245, 158, 11, 0.5);
+            box-shadow: 0 6px 16px -4px rgba(216, 146, 42, 0.5);
         }
         .modal-save-btn:active {
             transform: translateY(0) scale(0.98);
@@ -835,8 +967,8 @@
             position: sticky;
             top: 0;
             z-index: 30;
-            background: #0f172a;
-            border-bottom: 1px solid #334155;
+            background: #1a1512;
+            border-bottom: 1px solid #322b25;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -862,24 +994,24 @@
             padding: 14px 18px;
             font-size: 12px;
             font-weight: 600;
-            color: #94a3b8;
-            background: #0f172a;
+            color: #9a8b78;
+            background: #1a1512;
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             border-bottom: 3px solid transparent;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.08em;
         }
         .tab-item:active {
             transform: scale(0.97);
         }
         .tab-item.active {
-            color: #f59e0b;
-            border-bottom-color: #f59e0b;
-            background: linear-gradient(to bottom, rgba(245, 158, 11, 0.1) 0%, #0f172a 100%);
+            color: #d8922a;
+            border-bottom-color: #d8922a;
+            background: linear-gradient(to bottom, rgba(216, 146, 42, 0.1) 0%, #1a1512 100%);
         }
         /* Ajuste de padding para compensar tabs fijos */
         @media (max-width: 768px) {
@@ -888,20 +1020,47 @@
             }
         }
     </style>
+
+    <!-- Datos estructurados para SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "VORAZ Sushi",
+      "image": "https://vorazsushi.cl/img/passion.jpeg",
+      "url": "https://vorazsushi.cl/",
+      "telephone": "+56973365375",
+      "servesCuisine": ["Sushi", "Comida japonesa", "Fusión Nikkei"],
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Santiago Centro",
+        "addressRegion": "Región Metropolitana",
+        "addressCountry": "CL"
+      },
+      "slogan": "Sabor fusión, técnica experta",
+      "hasMenu": "https://vorazsushi.cl/"
+    }
+    </script>
 </head>
 <body class="text-slate-100 pb-32">
 
     <!-- BLOQUE 1: CABECERA -->
-    <header class="text-center py-8 px-4 bg-slate-900 border-b border-slate-700 shadow-lg relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
-
-        <!-- Logo animado -->
-        <div class="logo-container mb-4">
-            <img src="img/logo.png" alt="VORAZ Logo" class="logo-glow mx-auto w-16 h-16 md:w-20 md:h-20">
+    <header class="site-header">
+        <div class="header-ember"></div>
+        <div class="hanko">旨</div>
+        <div class="header-inner">
+            <div class="header-kicker">
+                <span class="rule"></span>
+                <span>Santiago &middot; Chile</span>
+                <span class="rule"></span>
+            </div>
+            <div class="logo-container">
+                <img src="img/logo.png" alt="VORAZ Sushi" class="logo-glow mx-auto w-16 h-16 md:w-20 md:h-20">
+            </div>
+            <h1 class="wordmark">VORAZ</h1>
+            <p class="header-tagline">&ldquo;Sabor fusión, técnica experta&rdquo;</p>
         </div>
-
-        <h1 class="text-5xl text-white mb-1 tracking-widest uppercase" style="text-shadow: 2px 2px 0px rgba(245, 158, 11, 0.2);">VORAZ</h1>
-                <p class="text-slate-400 italic font-light text-xs">"Sabor fusión, técnica experta"</p>
     </header>
 
     <!-- TABS MÓVIL (Solo visible en móvil) -->
@@ -1155,7 +1314,7 @@
                             <span class="text-amber-600 font-bold">$6.900</span>
                         </div>
                         <p class="text-xs text-amber-600 mb-2">(El Viaje de Sabores)</p>
-                        <p class="text-xs text-slate-400 mb-3 flex-grow">Un viaje de sabores. Envuelto en plátano frito, relleno con camarón, queso crema y cebollín. Terminado con un topping crocante y bañado en nuestra salsa de maracuyá.</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Un viaje de sabores. Envuelto en láminas de plátano, relleno con camarón apanado, queso crema y cebollín. Terminado con un topping crocante y bañado en nuestra salsa de maracuyá.</p>
                         <div class="flex items-center justify-end gap-2 mt-auto">
                             <div class="flex items-center bg-slate-800 rounded-full">
                                 <button onclick="changeQty('qtyOcaso', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
@@ -2812,7 +2971,7 @@
                 <!-- Ubicación -->
                 <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
                     <i class="fas fa-map-marker-alt text-red-500 text-2xl mb-2"></i>
-                    <h4 class="text-white font-bold uppercase mb-1">Retiro en Local</h4>
+                    <h4 class="text-white font-bold uppercase mb-1">Retiro</h4>
                     <p class="text-slate-400 text-sm">San Diego 1344</p>
                     <p class="text-slate-500 text-xs mt-1">Santiago Centro</p>
                 </div>
@@ -3217,8 +3376,8 @@
                     title: 'Selecciona las proteinas',
                     text: 'Debes elegir la proteina para ambos rolls',
                     icon: 'warning',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3245,8 +3404,8 @@
                     title: 'Completa tu combo',
                     text: 'Debes elegir la proteina para el frito, el california y tu salsa premium gratis',
                     icon: 'warning',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3274,8 +3433,8 @@
                     title: 'Completa tu combo',
                     text: 'Debes elegir los 2 rolls premium y tu salsa premium gratis',
                     icon: 'warning',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3304,8 +3463,8 @@
                     title: 'Completa tu combo',
                     text: 'Debes elegir los 3 rolls premium y tu salsa premium gratis',
                     icon: 'warning',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3366,23 +3525,23 @@
 
             // Validaciones
             if (!envoltura) {
-                Swal.fire({ title: 'Selecciona la envoltura', icon: 'warning', background: '#0f172a', color: '#f8fafc' });
+                Swal.fire({ title: 'Selecciona la envoltura', icon: 'warning', background: '#1a1512', color: '#f3ebdb' });
                 return;
             }
             if (!relleno1) {
-                Swal.fire({ title: 'Selecciona el relleno 1', icon: 'warning', background: '#0f172a', color: '#f8fafc' });
+                Swal.fire({ title: 'Selecciona el relleno 1', icon: 'warning', background: '#1a1512', color: '#f3ebdb' });
                 return;
             }
             if (!relleno2) {
-                Swal.fire({ title: 'Selecciona el relleno 2', icon: 'warning', background: '#0f172a', color: '#f8fafc' });
+                Swal.fire({ title: 'Selecciona el relleno 2', icon: 'warning', background: '#1a1512', color: '#f3ebdb' });
                 return;
             }
             if (!salsa) {
-                Swal.fire({ title: 'Selecciona la salsa', icon: 'warning', background: '#0f172a', color: '#f8fafc' });
+                Swal.fire({ title: 'Selecciona la salsa', icon: 'warning', background: '#1a1512', color: '#f3ebdb' });
                 return;
             }
             if (!topping) {
-                Swal.fire({ title: 'Selecciona el topping', icon: 'warning', background: '#0f172a', color: '#f8fafc' });
+                Swal.fire({ title: 'Selecciona el topping', icon: 'warning', background: '#1a1512', color: '#f3ebdb' });
                 return;
             }
 
@@ -3482,8 +3641,8 @@
                 showConfirmButton: false,
                 timer: 1500,
                 timerProgressBar: false,
-                background: '#1e293b',
-                color: '#f8fafc'
+                background: '#241f1b',
+                color: '#f3ebdb'
             });
             Toast.fire({
                 icon: 'success',
@@ -3509,8 +3668,8 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                background: '#1e293b',
-                color: '#f8fafc'
+                background: '#241f1b',
+                color: '#f3ebdb'
             });
             Toast.fire({
                 icon: 'success',
@@ -3565,7 +3724,7 @@
             },
             'Ocaso Roll': {
                 img: 'img/ocaso.jpeg',
-                desc: 'Plátano frito, camarón, queso crema y cebollín, topping crocante y salsa de maracuyá.'
+                desc: 'Láminas de plátano, camarón apanado, queso crema y cebollín, topping crocante y salsa de maracuyá.'
             }
         };
 
@@ -3634,8 +3793,8 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                background: '#1e293b',
-                color: '#f8fafc'
+                background: '#241f1b',
+                color: '#f3ebdb'
             });
             Toast.fire({
                 icon: 'success',
@@ -3786,6 +3945,8 @@
             } else {
                 cartBar.classList.remove('visible');
             }
+
+            saveCart();
         }
 
         function clearCart() {
@@ -3799,8 +3960,8 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Si, vaciar',
                 cancelButtonText: 'Cancelar',
-                background: '#0f172a',
-                color: '#f8fafc'
+                background: '#1a1512',
+                color: '#f3ebdb'
             }).then((result) => {
                 if (result.isConfirmed) {
                     cart = [];
@@ -3818,8 +3979,8 @@
                     title: 'Carrito vacio',
                     text: 'Agrega productos antes de enviar el pedido',
                     icon: 'info',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3829,8 +3990,8 @@
                     title: 'Selecciona tipo de entrega',
                     text: 'Elige entre Retiro en tienda o Delivery',
                     icon: 'info',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -3845,8 +4006,8 @@
                         title: 'Completa la direccion',
                         text: 'Debes ingresar calle/número y comuna para el delivery',
                         icon: 'warning',
-                        background: '#0f172a',
-                        color: '#f8fafc'
+                        background: '#1a1512',
+                        color: '#f3ebdb'
                     });
                     return;
                 }
@@ -3881,7 +4042,19 @@
                 message += `- ${count}x ${name} (${subtotal})\n`;
             }
 
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            // Descuento por salsas premium (precio por pares)
+            const cantidadSalsasPremium = cart.filter(item => item.isPremiumSalsa).length;
+            const descuentoSalsas = (cantidadSalsasPremium * 600) - calcularPrecioSalsasPremium();
+            if (descuentoSalsas > 0) {
+                const formattedDescuento = descuentoSalsas.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+                message += `- Descuento Salsas Premium (-${formattedDescuento})\n`;
+            }
+
+            // Total: items normales + salsas premium con precio por pares
+            const totalOtros = cart
+                .filter(item => !item.isPremiumSalsa)
+                .reduce((sum, item) => sum + item.price, 0);
+            const total = totalOtros + calcularPrecioSalsasPremium();
             const formattedTotal = total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
 
             message += `\n*TOTAL: ${formattedTotal}*`;
@@ -3913,8 +4086,8 @@
                     title: 'Completa los campos',
                     text: 'Calle/número y comuna son obligatorios',
                     icon: 'warning',
-                    background: '#0f172a',
-                    color: '#f8fafc'
+                    background: '#1a1512',
+                    color: '#f3ebdb'
                 });
                 return;
             }
@@ -4049,6 +4222,51 @@
             setTimeout(updateActiveSection, 100);
             setTimeout(updateActiveSection, 500);
         })();
+
+        // ============================================
+        // PERSISTENCIA DEL CARRITO (localStorage)
+        // ============================================
+        const CART_STORAGE_KEY = 'voraz_cart_v1';
+
+        function saveCart() {
+            try {
+                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+            } catch (e) {
+                console.warn('No se pudo guardar el carrito:', e);
+            }
+        }
+
+        function loadCart() {
+            try {
+                const stored = localStorage.getItem(CART_STORAGE_KEY);
+                if (!stored) return [];
+                const parsed = JSON.parse(stored);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                console.warn('No se pudo cargar el carrito:', e);
+                return [];
+            }
+        }
+
+        // Restaurar el carrito guardado al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            cart = loadCart();
+            if (cart.length > 0) {
+                updateCartUI();
+                renderCartItems();
+            }
+        });
+
+        // ============================================
+        // SERVICE WORKER (PWA / soporte offline)
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => {
+                    console.warn('Service Worker no registrado:', err);
+                });
+            });
+        }
     </script>
 
     <!-- MODAL DE DIRECCIÓN DELIVERY -->
