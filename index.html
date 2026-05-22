@@ -470,6 +470,27 @@
             filter: blur(8px);
         }
         .header-inner { position: relative; z-index: 1; }
+        /* Cinta diagonal "NUEVO" en la esquina superior izquierda de la tarjeta.
+           El contenedor (.relative) recorta los extremos con overflow-hidden. */
+        .badge-nuevo {
+            position: absolute;
+            top: 16px;
+            left: -38px;
+            z-index: 2;
+            width: 150px;
+            padding: 5px 0;
+            transform: rotate(-45deg);
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+            text-align: center;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            line-height: 1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+        }
         .header-kicker {
             display: flex;
             align-items: center;
@@ -1110,7 +1131,31 @@
             <p class="text-xs text-amber-600 mb-4 flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> 10 bocados por roll</p>
 
             <div class="grid md:grid-cols-3 gap-4">
-                <!-- Producto 1 - Tentation Roll -->
+                <!-- Producto 1 - Golden Roll -->
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <span class="badge-nuevo">Nuevo</span>
+                    <img src="img/golden.jpeg" alt="Golden Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Golden Roll</h3>
+                            <span class="text-amber-600 font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(El Dorado)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Doblemente crujiente. Envuelto en alga nori frita, relleno con pollo, queso crema y cebollín. Coronado con más pollo y nuestras irresistibles salsas.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyGolden', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyGolden" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyGolden', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Golden Roll', 6900, 'qtyGolden')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 2 - Tentation Roll -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/tentation.jpeg" alt="Tentation Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1133,7 +1178,7 @@
                     </div>
                 </div>
 
-                <!-- Producto 2 - Tropical Fire -->
+                <!-- Producto 3 - Tropical Fire -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/tropical.jpeg" alt="Tropical Fire" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1156,7 +1201,7 @@
                     </div>
                 </div>
 
-                <!-- Producto 3 - Kani Volcán -->
+                <!-- Producto 4 - Kani Volcán -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/kani.jpeg" alt="Kani Volcán" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1179,7 +1224,7 @@
                     </div>
                 </div>
 
-                <!-- Producto 4 - Pollo Fuji -->
+                <!-- Producto 5 - Pollo Fuji -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/pollo_fuji.jpeg" alt="Pollo Fuji" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1201,29 +1246,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Producto 4: Golden -->
-                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
-                    <img src="img/golden.jpeg" alt="Golden Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
-                    <div class="p-3 flex flex-col flex-grow">
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl text-white">Golden Roll</h3>
-                            <span class="text-amber-600 font-bold">$6.900</span>
-                        </div>
-                        <p class="text-xs text-amber-600 mb-2">(El Dorado)</p>
-                        <p class="text-xs text-slate-400 mb-3 flex-grow">Doblemente crujiente. Envuelto en alga nori frita, relleno con pollo, queso crema y cebollín. Coronado con más pollo y nuestras irresistibles salsas.</p>
-                        <div class="flex items-center justify-end gap-2 mt-auto">
-                            <div class="flex items-center bg-slate-800 rounded-full">
-                                <button onclick="changeQty('qtyGolden', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
-                                <input id="qtyGolden" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
-                                <button onclick="changeQty('qtyGolden', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
-                            </div>
-                            <button onclick="addWithQty('Golden Roll', 6900, 'qtyGolden')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
-                                <i class="fas fa-plus"></i> AGREGAR
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -1236,7 +1258,55 @@
             <p class="text-xs text-amber-600 mb-4 flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> 10 bocados por roll</p>
 
             <div class="grid md:grid-cols-3 gap-4">
-                <!-- Producto 1 - Pasión Voraz -->
+                <!-- Producto 1 - Ocaso Roll -->
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <span class="badge-nuevo">Nuevo</span>
+                    <img src="img/ocaso.jpeg" alt="Ocaso Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Ocaso Roll</h3>
+                            <span class="text-amber-600 font-bold">$6.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(El Viaje de Sabores)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Un viaje de sabores. Envuelto en láminas de plátano, relleno con camarón apanado, queso crema y cebollín. Terminado con un topping crocante y bañado en nuestra salsa de maracuyá.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyOcaso', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyOcaso" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyOcaso', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Ocaso Roll', 6900, 'qtyOcaso')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 2 - Pacific Roll -->
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <span class="badge-nuevo">Nuevo</span>
+                    <img src="img/pacific.jpeg" alt="Pacific Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Pacific Roll</h3>
+                            <span class="text-amber-600 font-bold">$7.900</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(Fresco e Intenso)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Ideal para los amantes del mar. Envuelto en ciboulette y un toque de merkén, relleno con camarón crujiente, lechuga y palta. Coronado con una porción de ceviche.</p>
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyPacific', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyPacific" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyPacific', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Pacific Roll', 7900, 'qtyPacific')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 3 - Pasión Voraz -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/passion.jpeg" alt="Pasión Voraz" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1259,7 +1329,7 @@
                     </div>
                 </div>
 
-                <!-- Producto 2 - Inka Real -->
+                <!-- Producto 4 - Inka Real -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/inka.jpeg" alt="Inka Real" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1282,7 +1352,7 @@
                     </div>
                 </div>
 
-                <!-- Producto 3 - Ocean Wakame -->
+                <!-- Producto 5 - Ocean Wakame -->
                 <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
                     <img src="img/ocean.jpeg" alt="Ocean Wakame" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
                     <div class="p-3 flex flex-col flex-grow">
@@ -1299,52 +1369,6 @@
                                 <button onclick="changeQty('qtyWakame', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
                             </div>
                             <button onclick="addWithQty('Ocean Wakame', 6900, 'qtyWakame')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
-                                <i class="fas fa-plus"></i> AGREGAR
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 4 - Ocaso Roll -->
-                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
-                    <img src="img/ocaso.jpeg" alt="Ocaso Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
-                    <div class="p-3 flex flex-col flex-grow">
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl text-white">Ocaso Roll</h3>
-                            <span class="text-amber-600 font-bold">$6.900</span>
-                        </div>
-                        <p class="text-xs text-amber-600 mb-2">(El Viaje de Sabores)</p>
-                        <p class="text-xs text-slate-400 mb-3 flex-grow">Un viaje de sabores. Envuelto en láminas de plátano, relleno con camarón apanado, queso crema y cebollín. Terminado con un topping crocante y bañado en nuestra salsa de maracuyá.</p>
-                        <div class="flex items-center justify-end gap-2 mt-auto">
-                            <div class="flex items-center bg-slate-800 rounded-full">
-                                <button onclick="changeQty('qtyOcaso', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
-                                <input id="qtyOcaso" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
-                                <button onclick="changeQty('qtyOcaso', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
-                            </div>
-                            <button onclick="addWithQty('Ocaso Roll', 6900, 'qtyOcaso')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
-                                <i class="fas fa-plus"></i> AGREGAR
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 5 - Pacific Roll -->
-                <div class="bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
-                    <img src="img/pacific.jpeg" alt="Pacific Roll" class="h-48 w-full object-contain bg-slate-800" loading="lazy">
-                    <div class="p-3 flex flex-col flex-grow">
-                        <div class="flex justify-between items-baseline">
-                            <h3 class="text-xl text-white">Pacific Roll</h3>
-                            <span class="text-amber-600 font-bold">$7.900</span>
-                        </div>
-                        <p class="text-xs text-amber-600 mb-2">(Fresco e Intenso)</p>
-                        <p class="text-xs text-slate-400 mb-3 flex-grow">Ideal para los amantes del mar. Envuelto en ciboulette y un toque de merkén, relleno con camarón crujiente, lechuga y palta. Coronado con una porción de ceviche.</p>
-                        <div class="flex items-center justify-end gap-2 mt-auto">
-                            <div class="flex items-center bg-slate-800 rounded-full">
-                                <button onclick="changeQty('qtyPacific', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
-                                <input id="qtyPacific" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
-                                <button onclick="changeQty('qtyPacific', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
-                            </div>
-                            <button onclick="addWithQty('Pacific Roll', 7900, 'qtyPacific')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
                                 <i class="fas fa-plus"></i> AGREGAR
                             </button>
                         </div>
