@@ -898,6 +898,29 @@
             -webkit-backdrop-filter: blur(8px);
         }
 
+        /* Modal Promo Día del Sushi (se abre al entrar / refrescar) */
+        .dia-sushi-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .dia-sushi-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .dia-sushi-modal-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .dia-sushi-modal-content {
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .dia-sushi-modal.open .dia-sushi-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
         /* Modern Floating Label Inputs */
         .input-group {
             position: relative;
@@ -1087,6 +1110,10 @@
     <!-- TABS MÓVIL (Solo visible en móvil) -->
     <nav class="mobile-tabs" role="navigation" aria-label="Navegación del menú">
         <div class="tabs-container" role="tablist">
+            <!-- Pestaña Día del Sushi: visibilidad controlada por DIA_SUSHI.seccion -->
+            <button id="tabDiaSushi" class="tab-item" onclick="scrollToSection('diaSushi', this)" style="display:none">
+                <i class="fas fa-star text-xs mr-1"></i> Día del Sushi
+            </button>
             <button class="tab-item active" onclick="scrollToSection('hotRolls', this)" role="tab" aria-selected="true" aria-label="Ver Hot Rolls">
                 <i class="fas fa-fire text-xs mr-1" aria-hidden="true"></i> Hot Rolls
             </button>
@@ -1121,6 +1148,68 @@
     </nav>
 
     <main class="max-w-4xl mx-auto px-4" role="main">
+
+        <!-- BLOQUE 1: PROMO DÍA DEL SUSHI -->
+        <!-- Visibilidad de la sección (y de sus botones AGREGAR): DIA_SUSHI.seccion -->
+        <section id="diaSushi" class="mt-8 scroll-mt-20" style="display:none">
+            <div class="flex items-center mb-2">
+                <h2 class="text-3xl text-white mr-2">PROMO DÍA DEL SUSHI <span class="text-amber-500">⭐</span></h2>
+                <div class="h-0.5 bg-slate-700 flex-grow"></div>
+            </div>
+            <p class="text-xs text-amber-600 mb-4 flex items-center gap-1"><i class="fas fa-circle text-[6px]"></i> Solo por el Día del Sushi · 18 de junio</p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <!-- Promo Frita -->
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <span class="badge-nuevo">Nuevo</span>
+                    <img src="img/promo-frita.jpeg" alt="Promo Frita - 20 rollos fritos" class="w-full aspect-[11/10] object-cover object-center bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Promo Frita</h3>
+                            <span class="text-amber-600 font-bold">$7.490</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(20 rollos)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Combo frito · 20 rollos.</p>
+                        <!-- Fila de agregar (botón propio de la sección; se ve cuando seccion está encendida) -->
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyDiaSushi1', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyDiaSushi1" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyDiaSushi1', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Promo Frita (20 rollos)', 7490, 'qtyDiaSushi1')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo Fría -->
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-sm border border-slate-700 flex flex-col">
+                    <span class="badge-nuevo">Nuevo</span>
+                    <img src="img/promo-fria.jpeg" alt="Promo Fría - 20 rollos fríos" class="w-full aspect-[11/10] object-cover object-center bg-slate-800" loading="lazy">
+                    <div class="p-3 flex flex-col flex-grow">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl text-white">Promo Fría</h3>
+                            <span class="text-amber-600 font-bold">$7.490</span>
+                        </div>
+                        <p class="text-xs text-amber-600 mb-2">(20 rollos)</p>
+                        <p class="text-xs text-slate-400 mb-3 flex-grow">Combo frío · 20 rollos.</p>
+                        <!-- Fila de agregar (botón propio de la sección; se ve cuando seccion está encendida) -->
+                        <div class="flex items-center justify-end gap-2 mt-auto">
+                            <div class="flex items-center bg-slate-800 rounded-full">
+                                <button onclick="changeQty('qtyDiaSushi2', -1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">-</button>
+                                <input id="qtyDiaSushi2" type="number" value="1" min="1" max="10" class="w-8 bg-transparent text-white text-center text-sm focus:outline-none">
+                                <button onclick="changeQty('qtyDiaSushi2', 1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-sm">+</button>
+                            </div>
+                            <button onclick="addWithQty('Promo Fría (20 rollos)', 7490, 'qtyDiaSushi2')" class="text-xs bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full font-bold transition-colors click-shrink flex items-center gap-1">
+                                <i class="fas fa-plus"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- BLOQUE 2: HOT ROLLS -->
         <section id="hotRolls" class="mt-8 scroll-mt-20">
@@ -3327,6 +3416,42 @@
         let deliveryType = null; // null = no seleccionado, 'tienda' o 'delivery'
         const phoneNumber = "56973365375"; // TU NÚMERO
 
+        // ============================================
+        // INTERRUPTORES PROMO DÍA DEL SUSHI (18 de junio)
+        // Cambia a true para encender cada parte. Fácil de prender/apagar.
+        // ============================================
+        const DIA_SUSHI = {
+            modal: true,       // 1) ventana emergente al entrar/refrescar (solo el afiche, sin botón)
+            modalBoton: false, // 2) botón AGREGAR dentro del modal (agrega la promo automático al carrito)
+            seccion: false,    // 3) sección "Día del Sushi" + pestaña (sus tarjetas traen su propio botón)
+        };
+
+        function openDiaSushiModal() {
+            const m = document.getElementById('diaSushiModal');
+            if (m) { m.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        }
+        function closeDiaSushiModal() {
+            const m = document.getElementById('diaSushiModal');
+            if (m) { m.classList.remove('open'); document.body.style.overflow = ''; }
+        }
+        // Agrega una promo desde el modal y cierra la ventana
+        function addDiaSushiPromo(nombre, precio) {
+            addToCart(nombre, precio);
+            closeDiaSushiModal();
+        }
+
+        // Aplica los 3 interruptores: sección/pestaña, botón del modal y apertura del modal
+        function applyDiaSushiFlags() {
+            const sec = document.getElementById('diaSushi');
+            const tab = document.getElementById('tabDiaSushi');
+            if (sec) sec.style.display = DIA_SUSHI.seccion ? '' : 'none';
+            if (tab) tab.style.display = DIA_SUSHI.seccion ? '' : 'none';
+            const btns = document.getElementById('diaSushiModalBtns');
+            if (btns) btns.style.display = DIA_SUSHI.modalBoton ? '' : 'none';
+            if (DIA_SUSHI.modal) openDiaSushiModal();
+        }
+        document.addEventListener('DOMContentLoaded', applyDiaSushiFlags);
+
         // Estado de tipo de gyosas (frita por defecto)
         let gyosaTipos = {
             cerdo: 'frita',
@@ -4424,6 +4549,134 @@
                 <button onclick="saveDeliveryAddress()" class="modal-save-btn flex-1">
                     <i class="fas fa-check"></i>
                     <span>Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROMO DÍA DEL SUSHI (se abre al entrar / refrescar · controlado por DIA_SUSHI.modal) -->
+    <div id="diaSushiModal" class="dia-sushi-modal fixed inset-0 z-[70] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Promociones Día del Sushi">
+        <div class="dia-sushi-modal-overlay absolute inset-0" onclick="closeDiaSushiModal()"></div>
+        <div class="dia-sushi-modal-content relative w-full max-w-md">
+            <button onclick="closeDiaSushiModal()" class="absolute -top-3 -right-3 z-10 w-9 h-9 rounded-full bg-slate-900 text-white border border-slate-700 shadow-lg flex items-center justify-center hover:bg-slate-800" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <!-- ============================================================
+                 AFICHE PROMO DÍA DEL SUSHI (placeholder de diseño VORAZ)
+                 Cuando tengas el afiche real, reemplaza TODO este <svg>...</svg>
+                 por:  <img src="img/promo-dia-sushi.jpg" class="w-full rounded-[20px] shadow-2xl">
+                 Las 2 ventanas grises (FOTO PROMO 1 / 2) son donde van tus fotos.
+                 ============================================================ -->
+            <svg viewBox="0 0 800 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+                 aria-label="Promo Día del Sushi: 2 promos, $7.490 cada una, 20 rollos"
+                 class="w-full rounded-[20px] shadow-2xl" style="display:block">
+                <defs>
+                    <radialGradient id="dsBg" cx="22%" cy="-6%" r="120%">
+                        <stop offset="0%" stop-color="#241a12"/>
+                        <stop offset="46%" stop-color="#17110d"/>
+                        <stop offset="100%" stop-color="#100b08"/>
+                    </radialGradient>
+                    <radialGradient id="dsEmberGold" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#d8922a" stop-opacity="0.42"/>
+                        <stop offset="100%" stop-color="#d8922a" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="dsEmberRed" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#d6492f" stop-opacity="0.34"/>
+                        <stop offset="100%" stop-color="#d6492f" stop-opacity="0"/>
+                    </radialGradient>
+                    <linearGradient id="dsGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f4d488"/>
+                        <stop offset="38%" stop-color="#e6a838"/>
+                        <stop offset="100%" stop-color="#bd7522"/>
+                    </linearGradient>
+                    <linearGradient id="dsFrame" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2a2018"/>
+                        <stop offset="100%" stop-color="#191210"/>
+                    </linearGradient>
+                    <filter id="dsGrain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+                    <filter id="dsSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+                    <clipPath id="dsClip1"><rect x="60" y="436" width="330" height="300" rx="16"/></clipPath>
+                    <clipPath id="dsClip2"><rect x="410" y="436" width="330" height="300" rx="16"/></clipPath>
+                </defs>
+
+                <!-- Fondo + brasas -->
+                <rect width="800" height="1060" fill="url(#dsBg)"/>
+                <circle cx="150" cy="120" r="430" fill="url(#dsEmberGold)"/>
+                <circle cx="690" cy="940" r="430" fill="url(#dsEmberRed)"/>
+                <rect width="800" height="1060" filter="url(#dsGrain)" opacity="0.05"/>
+
+                <!-- Doodles de maki muy tenues -->
+                <g stroke="#d8922a" stroke-opacity="0.06" fill="none" stroke-width="2">
+                    <circle cx="80" cy="560" r="26"/><circle cx="80" cy="560" r="12"/>
+                    <circle cx="724" cy="300" r="22"/><circle cx="724" cy="300" r="9"/>
+                    <circle cx="710" cy="640" r="30"/><circle cx="710" cy="640" r="14"/>
+                    <circle cx="120" cy="880" r="20"/><circle cx="120" cy="880" r="8"/>
+                </g>
+
+                <!-- Marco afiche -->
+                <rect x="14" y="14" width="772" height="1032" rx="22" fill="none" stroke="url(#dsGold)" stroke-width="2" stroke-opacity="0.85"/>
+                <rect x="24" y="24" width="752" height="1012" rx="16" fill="none" stroke="#d8922a" stroke-opacity="0.18" stroke-width="1"/>
+
+                <!-- Wordmark -->
+                <text x="400" y="112" text-anchor="middle" font-family="'Shippori Mincho', serif" font-weight="800" font-size="62" letter-spacing="14" fill="#f3ebdb">VORAZ</text>
+                <g font-family="'Zen Kaku Gothic New', sans-serif">
+                    <line x1="296" y1="138" x2="372" y2="138" stroke="#d8922a" stroke-opacity="0.6" stroke-width="1.5"/>
+                    <text x="400" y="144" text-anchor="middle" font-size="16" font-weight="700" letter-spacing="9" fill="#d8922a">SUSHI · DELIVERY</text>
+                    <line x1="428" y1="138" x2="504" y2="138" stroke="#d8922a" stroke-opacity="0.6" stroke-width="1.5"/>
+                </g>
+
+                <!-- Titular -->
+                <text x="400" y="232" text-anchor="middle" font-family="'Shippori Mincho', serif" font-weight="800" font-size="72" letter-spacing="4" fill="#f3ebdb">GRAN PROMO</text>
+                <text x="400" y="300" text-anchor="middle" font-family="'Shippori Mincho', serif" font-weight="700" font-style="italic" font-size="50" letter-spacing="2" fill="#d6492f">por el Día del Sushi</text>
+
+                <!-- Cinta de precio -->
+                <g>
+                    <rect x="196" y="338" width="408" height="62" rx="31" fill="url(#dsGold)"/>
+                    <rect x="196" y="338" width="408" height="62" rx="31" fill="none" stroke="#f4d488" stroke-opacity="0.5" stroke-width="1.5"/>
+                    <text x="400" y="379" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="900" font-size="27" letter-spacing="1.5" fill="#17110d">$7.490 c/u · 20 ROLLOS</text>
+                </g>
+
+                <!-- Dos fotos (placeholders) -->
+                <g font-family="'Zen Kaku Gothic New', sans-serif">
+                    <!-- Promo Frita (foto real) -->
+                    <rect x="60" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
+                    <image href="img/promo-frita.jpeg" x="60" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip1)"/>
+
+                    <!-- Promo Fría -->
+                    <rect x="410" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
+                    <image href="img/promo-fria.jpeg" x="410" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip2)"/>
+                </g>
+
+                <!-- Nombres + descripción -->
+                <g font-family="'Zen Kaku Gothic New', sans-serif" text-anchor="middle">
+                    <text x="225" y="792" font-family="'Shippori Mincho', serif" font-weight="700" font-size="30" fill="#e6a838">Promo Frita</text>
+                    <text x="225" y="822" font-size="15" letter-spacing="3" fill="#bd7522">20 ROLLOS</text>
+                    <text x="225" y="858" font-size="14" fill="#b09a7f">Combo frito</text>
+
+                    <text x="575" y="792" font-family="'Shippori Mincho', serif" font-weight="700" font-size="30" fill="#e6a838">Promo Fría</text>
+                    <text x="575" y="822" font-size="15" letter-spacing="3" fill="#bd7522">20 ROLLOS</text>
+                    <text x="575" y="858" font-size="14" fill="#b09a7f">Combo frío</text>
+                </g>
+
+                <!-- Separador -->
+                <g transform="translate(400 912)">
+                    <line x1="-150" y1="0" x2="-16" y2="0" stroke="#d8922a" stroke-opacity="0.35" stroke-width="1"/>
+                    <path d="M0 -7 L7 0 L0 7 L-7 0 Z" fill="#d8922a"/>
+                    <line x1="16" y1="0" x2="150" y2="0" stroke="#d8922a" stroke-opacity="0.35" stroke-width="1"/>
+                </g>
+
+                <!-- Validez -->
+                <text x="400" y="972" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="900" font-size="24" letter-spacing="3" fill="#f3ebdb">VÁLIDO SOLO EL 18 DE JUNIO</text>
+                <text x="400" y="1004" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-size="15" letter-spacing="5" fill="#d8922a">DÍA DEL SUSHI</text>
+            </svg>
+
+            <!-- Botones AGREGAR del modal (visibilidad: DIA_SUSHI.modalBoton) -->
+            <div id="diaSushiModalBtns" class="mt-3 grid grid-cols-2 gap-2" style="display:none">
+                <button onclick="addDiaSushiPromo('Promo Frita (20 rollos)', 7490)" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2.5 rounded-full font-bold text-sm transition-colors click-shrink flex items-center justify-center gap-1">
+                    <i class="fas fa-plus"></i> Promo Frita · $7.490
+                </button>
+                <button onclick="addDiaSushiPromo('Promo Fría (20 rollos)', 7490)" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2.5 rounded-full font-bold text-sm transition-colors click-shrink flex items-center justify-center gap-1">
+                    <i class="fas fa-plus"></i> Promo Fría · $7.490
                 </button>
             </div>
         </div>
