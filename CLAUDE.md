@@ -27,11 +27,12 @@ step; the trade-off is a brief flash before styles apply.
 
 ## Structure
 
-- `index.html` (~4200 lines) — the whole app: an inline `<style>` block, a `tailwind.config`
+- `index.html` (~4700 lines) — the whole app: an inline `<style>` block, a `tailwind.config`
   script, the HTML body, and one large inline `<script>`.
 - `manifest.json` — PWA manifest (install metadata, icons, theme colors).
 - `sw.js` — service worker (offline support, asset caching).
-- `img/` — product photos and the logo.
+- `img/` — product photos and the logo (e.g. `promo-frita.jpeg`, `promo-fria.jpeg` for the
+  current Día del Sushi campaign).
 - `README.md` — one line.
 
 ## Visual design / theming
@@ -55,7 +56,8 @@ Fonts: **Shippori Mincho** (display / headings — `h1,h2,h3`) and **Zen Kaku Go
 - The menu is a series of `<section>` blocks, each with an `id` used by the mobile tab
   nav: `hotRolls`, `freshRolls`, `pokes`, `clasicos`, `combos`, `promos`, `entradas`,
   `salsas`, `bebidas`. (`vorazCreativo` exists but is commented out / hidden.) Tabs call
-  `scrollToSection(id, btn)`.
+  `scrollToSection(id, btn)`. The flag-gated `diaSushi` section (see **Promotional
+  campaign system** below) is the first `<section>` in `<main>` and is hidden by default.
 
 - Each product is a card with a quantity stepper and an "AGREGAR" button. **Product names
   and prices are hardcoded as literal arguments in inline `onclick` handlers** — e.g.
@@ -102,8 +104,8 @@ Fonts: **Shippori Mincho** (display / headings — `h1,h2,h3`) and **Zen Kaku Go
   occurrence.
 - Currency is formatted with `toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })`.
 - **Service worker**: `sw.js` uses a stale-while-revalidate strategy under cache name
-  `voraz-v1`. To force returning visitors to fully refresh cached assets, bump that
-  version string (`voraz-v1` → `voraz-v2`).
+  `voraz-v2` (the `CACHE` const). To force returning visitors to fully refresh cached
+  assets, bump that version string (e.g. `voraz-v2` → `voraz-v3`).
 - The `<head>` contains JSON-LD structured data typed as `Restaurant` and absolute URLs
   under `https://vorazsushi.cl/` — update the domain/type if it changes.
 - Changing a Fusión combo's price means editing **both** the card's displayed prices
@@ -117,6 +119,46 @@ Fonts: **Shippori Mincho** (display / headings — `h1,h2,h3`) and **Zen Kaku Go
   Remove the span when the product is no longer new. The ribbon is blue by deliberate
   choice (a conventional "new" cue) — it is the one accent that intentionally departs
   from the warm "ink & ember" palette.
+
+## Promotional campaign system ("Día del Sushi")
+
+A reusable, flag-gated promo campaign. Everything lives in `index.html` and is built so a
+campaign can be fully prepared while invisible, then switched on. Originally built for the
+Día del Sushi (18 June) promo with two products at $7.490 / 20 rolls each ("Promo Frita",
+"Promo Fría").
+
+- **Master switches** — one `DIA_SUSHI` config object near the `phoneNumber` const in the
+  `<script>` drives three **independent** parts; flip any to `true`/`false`:
+  - `modal` — the popup poster that opens on every page load / refresh (just the artwork,
+    no buttons).
+  - `modalBoton` — the two "AGREGAR" buttons rendered **inside** the modal (add the promo
+    straight to cart and close the modal).
+  - `seccion` — the `diaSushi` menu section **and** its mobile tab (`tabDiaSushi`). The
+    section's own per-card "AGREGAR" buttons are part of the section, so they appear/hide
+    with it (no separate flag).
+  `applyDiaSushiFlags()` (run on `DOMContentLoaded`) reads the object and shows/hides the
+  section, tab and modal buttons, and opens the modal. To retire/reuse the campaign, set
+  all three to `false`; the markup stays in place for next time.
+
+- **Modal** — `#diaSushiModal` (markup near the end of `<body>`, just after the delivery
+  modal) uses the `.dia-sushi-modal` / `.open` CSS pattern (in the inline `<style>`,
+  mirroring `.delivery-modal`). Helpers: `openDiaSushiModal()`, `closeDiaSushiModal()`,
+  and `addDiaSushiPromo(name, price)` (adds via `addToCart` then closes).
+
+- **The poster is an inline `<svg>`** (not a raster image) so it renders with the real
+  Shippori Mincho font and the ink & ember palette. It embeds the real product photos via
+  `<image href="img/promo-*.jpeg">` clipped to rounded frames (`dsClip1`/`dsClip2` in
+  `<defs>`). To swap a photo, change the `href`; to replace the whole poster with a
+  finished raster, swap the `<svg>…</svg>` for `<img src="…">`.
+
+- **Section cards** mirror the normal product-card markup but use `aspect-[11/10]`
+  (near-square, matching the poster's 330×300 frames) instead of the menu's usual
+  `h-48 object-contain`, so the portrait promo photos show fully without an ugly crop.
+
+- **Exporting the poster as a shareable image**: extract the `<svg viewBox="0 0 800 1060"…>`
+  block, render it (e.g. macOS `qlmanage -t -s 2000 -o <dir> poster.svg` with the `img/`
+  photos beside it), then crop the square padding QuickLook adds back to the 800:1060
+  ratio (`sips -c 2000 1510`).
 
 ## Known tech debt / not yet done
 

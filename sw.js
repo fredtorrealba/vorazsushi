@@ -2,7 +2,7 @@
    Estrategia: stale-while-revalidate — sirve desde caché al instante
    y actualiza en segundo plano. Permite abrir el menú sin conexión. */
 
-const CACHE = 'voraz-v1';
+const CACHE = 'voraz-v2';
 const CORE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {
