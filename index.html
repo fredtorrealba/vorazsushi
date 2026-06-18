@@ -35,6 +35,11 @@
     <link rel="icon" type="image/png" href="img/logo.png">
     <link rel="apple-touch-icon" href="img/logo.png">
 
+    <!-- Precarga de las fotos del afiche Día del Sushi: el <svg> del modal las
+         embebe con <image>, y sin precarga a veces no se pintan al recargar -->
+    <link rel="preload" as="image" href="img/promo-frita.jpeg">
+    <link rel="preload" as="image" href="img/promo-fria.jpeg">
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4776,7 +4781,7 @@
                  por:  <img src="img/promo-dia-sushi.jpg" class="w-full rounded-[20px] shadow-2xl">
                  Las 2 ventanas grises (FOTO PROMO 1 / 2) son donde van tus fotos.
                  ============================================================ -->
-            <svg viewBox="0 0 800 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+            <svg viewBox="0 0 800 1060" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img"
                  aria-label="Promo Día del Sushi: 2 promos, $7.490 cada una, 20 piezas"
                  class="w-full rounded-[20px] shadow-2xl" style="display:block">
                 <defs>
@@ -4849,11 +4854,11 @@
                 <g font-family="'Zen Kaku Gothic New', sans-serif">
                     <!-- Promo Frita (foto real) -->
                     <rect x="60" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
-                    <image href="img/promo-frita.jpeg" x="60" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip1)"/>
+                    <image href="img/promo-frita.jpeg" xlink:href="img/promo-frita.jpeg" x="60" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip1)"/>
 
                     <!-- Promo Fría -->
                     <rect x="410" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
-                    <image href="img/promo-fria.jpeg" x="410" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip2)"/>
+                    <image href="img/promo-fria.jpeg" xlink:href="img/promo-fria.jpeg" x="410" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip2)"/>
                 </g>
 
                 <!-- Nombres + descripción -->
