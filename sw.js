@@ -2,7 +2,7 @@
    Estrategia: stale-while-revalidate — sirve desde caché al instante
    y actualiza en segundo plano. Permite abrir el menú sin conexión. */
 
-const CACHE = 'voraz-v3';
+const CACHE = 'voraz-v4';
 const CORE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -29,6 +29,25 @@ self.addEventListener('fetch', (event) => {
   // Solo cacheamos peticiones GET
   if (request.method !== 'GET') return;
 
+  // HTML / navegación: NETWORK-FIRST. Siempre intenta la última versión
+  // del sitio; si no hay conexión, cae al HTML cacheado (modo offline).
+  const aceptaHtml = (request.headers.get('accept') || '').includes('text/html');
+  if (request.mode === 'navigate' || aceptaHtml) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((c) => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Resto de assets (imágenes, manifest, etc.): stale-while-revalidate.
   event.respondWith(
     caches.match(request).then((cached) => {
       const networkFetch = fetch(request)

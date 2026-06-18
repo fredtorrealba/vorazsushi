@@ -2156,7 +2156,7 @@
 
                 <!-- Promo 20 Voraz Mixtas Premium -->
                 <div class="bg-slate-900 rounded-xl border border-slate-700 hover:border-amber-500/50 transition-all shadow-sm hover:shadow-md overflow-hidden">
-                    <img src="img/20-voraz-premium.png" alt="20 Voraz Mixtas Premium" class="w-full object-contain bg-slate-800" loading="lazy">
+                    <img src="img/20-voraz-premium.jpeg" alt="20 Voraz Mixtas Premium" class="w-full object-contain bg-slate-800" loading="lazy">
                     <div class="bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-700 p-3 flex items-center justify-between">
                         <div>
                             <span class="text-2xl font-bold">20 Voraz</span>
@@ -3216,6 +3216,26 @@
             <!-- Los items se agregan dinamicamente -->
         </div>
 
+        <!-- Extras: salsa incluida (elige una) y palitos — compacto, encima del resumen -->
+        <div class="cart-extras px-4 py-2 border-t border-slate-800">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-slate-500 text-[10px] uppercase tracking-wider font-medium">Salsa incluida</span>
+                <div class="flex items-center gap-2 text-slate-300 text-xs font-medium">
+                    <span><i class="fas fa-utensils text-amber-500 mr-1"></i>Palitos</span>
+                    <div class="flex items-center bg-slate-800 rounded-full border border-slate-700">
+                        <button onclick="changePalitos(-1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-xs">-</button>
+                        <span id="palitosCount" class="w-6 text-white text-center text-xs font-bold">0</span>
+                        <button onclick="changePalitos(1)" class="w-6 h-6 text-white hover:bg-slate-700 rounded-full text-xs">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button id="salsaSoya" onclick="selectSalsa('soya')" class="salsa-btn text-xs font-bold py-1.5 rounded-full transition-all border border-slate-700 bg-slate-800 text-slate-400">Soya</button>
+                <button id="salsaTeriyaki" onclick="selectSalsa('teriyaki')" class="salsa-btn text-xs font-bold py-1.5 rounded-full transition-all border border-slate-700 bg-slate-800 text-slate-400">Teriyaki</button>
+                <button id="salsaAmbas" onclick="selectSalsa('ambas')" class="salsa-btn text-xs font-bold py-1.5 rounded-full transition-all border border-slate-700 bg-slate-800 text-slate-400">Ambas</button>
+            </div>
+        </div>
+
         <!-- Footer con totales y botones -->
         <div class="cart-footer">
             <!-- Subtotal -->
@@ -3425,6 +3445,8 @@
         // Lógica del Carrito
         let cart = [];
         let deliveryType = null; // null = no seleccionado, 'tienda' o 'delivery'
+        let salsaSeleccion = null; // 'soya' | 'teriyaki' | 'ambas' | null (solo una)
+        let palitosCantidad = 0;   // cantidad de palitos, tope 10
         const phoneNumber = "56973365375"; // TU NÚMERO
 
         // ============================================
@@ -4178,6 +4200,52 @@
             saveCart();
         }
 
+        // ====== Extras del carrito: salsa incluida (una sola) y palitos ======
+        function selectSalsa(tipo) {
+            // Permite elegir solo una; volver a tocar la activa la deselecciona
+            salsaSeleccion = (salsaSeleccion === tipo) ? null : tipo;
+            updateSalsaUI();
+            saveCart();
+        }
+
+        function updateSalsaUI() {
+            [['soya', 'salsaSoya'], ['teriyaki', 'salsaTeriyaki'], ['ambas', 'salsaAmbas']].forEach(([tipo, id]) => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                if (salsaSeleccion === tipo) {
+                    btn.classList.add('bg-amber-500', 'text-white');
+                    btn.classList.remove('bg-slate-800', 'text-slate-400');
+                } else {
+                    btn.classList.remove('bg-amber-500', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-400');
+                }
+            });
+        }
+
+        function changePalitos(delta) {
+            palitosCantidad = Math.max(0, Math.min(10, palitosCantidad + delta));
+            const pc = document.getElementById('palitosCount');
+            if (pc) pc.innerText = palitosCantidad;
+            saveCart();
+        }
+
+        // Reinicia salsa y palitos (misma limpieza que los items del carrito)
+        function resetExtras() {
+            salsaSeleccion = null;
+            palitosCantidad = 0;
+            updateSalsaUI();
+            const pc = document.getElementById('palitosCount');
+            if (pc) pc.innerText = '0';
+        }
+
+        // Texto legible de la salsa elegida (para el mensaje de WhatsApp)
+        function salsaTexto() {
+            if (salsaSeleccion === 'soya') return 'Soya';
+            if (salsaSeleccion === 'teriyaki') return 'Teriyaki';
+            if (salsaSeleccion === 'ambas') return 'Soya y Teriyaki (ambas)';
+            return null;
+        }
+
         function clearCart() {
             if(cart.length === 0) return;
             Swal.fire({
@@ -4194,6 +4262,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     cart = [];
+                    resetExtras();
                     updateCartUI();
                     renderCartItems();
                     document.getElementById('cartDrawer').classList.remove('open');
@@ -4242,6 +4311,99 @@
                 }
             }
 
+            // Si falta elegir salsa y/o palitos, abrir popup donde se pueden
+            // seleccionar ahí mismo (igual que en el carrito) antes de enviar.
+            const faltaSalsa = !salsaSeleccion;
+            const faltanPalitos = palitosCantidad === 0;
+            if (faltaSalsa || faltanPalitos) {
+                confirmarExtrasYEnviar(faltaSalsa, faltanPalitos);
+                return;
+            }
+
+            enviarPedido();
+        }
+
+        // Popup que permite elegir salsa y palitos antes de enviar (mismo
+        // comportamiento que el carrito). Al confirmar, aplica la selección
+        // al carrito real, la guarda y envía el pedido.
+        function confirmarExtrasYEnviar(faltaSalsa, faltanPalitos) {
+            let salsaTmp = salsaSeleccion;
+            let palitosTmp = palitosCantidad;
+
+            let html = '<div style="text-align:left">';
+            if (faltaSalsa) {
+                html += `
+                  <p style="font-size:13px;color:#b09a7f;margin:0 0 8px">Elige tu salsa incluida:</p>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+                    <button type="button" class="sw-salsa-btn" data-salsa="soya">Soya</button>
+                    <button type="button" class="sw-salsa-btn" data-salsa="teriyaki">Teriyaki</button>
+                    <button type="button" class="sw-salsa-btn" data-salsa="ambas">Ambas</button>
+                  </div>`;
+            }
+            if (faltanPalitos) {
+                html += `
+                  <p style="font-size:13px;color:#b09a7f;margin:0 0 8px">¿Cuántos palitos? (máx. 10)</p>
+                  <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:4px">
+                    <button type="button" id="swPalitosMenos" class="sw-step">-</button>
+                    <span id="swPalitosCount" style="min-width:28px;text-align:center;font-weight:700;font-size:18px;color:#fff">0</span>
+                    <button type="button" id="swPalitosMas" class="sw-step">+</button>
+                  </div>`;
+            }
+            html += '</div>';
+
+            const titulo = (faltaSalsa && faltanPalitos) ? 'Agrega salsa y palitos'
+                         : faltaSalsa ? 'Elige tu salsa'
+                         : 'Agrega tus palitos';
+
+            Swal.fire({
+                title: titulo,
+                html: html,
+                showCancelButton: true,
+                confirmButtonText: 'Continuar y enviar',
+                cancelButtonText: 'Volver',
+                confirmButtonColor: '#16a34a',
+                cancelButtonColor: '#6b7280',
+                background: '#1a1512',
+                color: '#f3ebdb',
+                didOpen: () => {
+                    const popup = Swal.getPopup();
+
+                    // Salsa (selección única; volver a tocar la activa la quita)
+                    const salsaBtns = popup.querySelectorAll('.sw-salsa-btn');
+                    const paintSalsa = () => salsaBtns.forEach(b => {
+                        const active = b.dataset.salsa === salsaTmp;
+                        b.style.cssText = `padding:9px;border-radius:9999px;font-weight:700;font-size:12px;cursor:pointer;border:1px solid ${active ? '#e6a838' : '#3a2e22'};background:${active ? '#e6a838' : '#2a2018'};color:${active ? '#17110d' : '#b09a7f'}`;
+                    });
+                    salsaBtns.forEach(b => b.addEventListener('click', () => {
+                        salsaTmp = (salsaTmp === b.dataset.salsa) ? null : b.dataset.salsa;
+                        paintSalsa();
+                    }));
+                    paintSalsa();
+
+                    // Palitos
+                    const countEl = popup.querySelector('#swPalitosCount');
+                    const menos = popup.querySelector('#swPalitosMenos');
+                    const mas = popup.querySelector('#swPalitosMas');
+                    [menos, mas].forEach(btn => { if (btn) btn.style.cssText = 'width:36px;height:36px;border-radius:9999px;border:1px solid #3a2e22;background:#2a2018;color:#fff;font-size:18px;cursor:pointer'; });
+                    if (countEl) countEl.textContent = palitosTmp;
+                    if (menos) menos.addEventListener('click', () => { palitosTmp = Math.max(0, palitosTmp - 1); countEl.textContent = palitosTmp; });
+                    if (mas) mas.addEventListener('click', () => { palitosTmp = Math.min(10, palitosTmp + 1); countEl.textContent = palitosTmp; });
+                },
+                preConfirm: () => ({ salsa: salsaTmp, palitos: palitosTmp })
+            }).then((result) => {
+                if (!result.isConfirmed) return;
+                // Aplicar la selección al carrito real y enviar
+                salsaSeleccion = result.value.salsa;
+                palitosCantidad = result.value.palitos;
+                updateSalsaUI();
+                const pc = document.getElementById('palitosCount');
+                if (pc) pc.innerText = palitosCantidad;
+                saveCart();
+                enviarPedido();
+            });
+        }
+
+        function enviarPedido() {
             // Agrupar items
             const counts = {};
             const prices = {};
@@ -4270,6 +4432,11 @@
                 const subtotal = (count * prices[name]).toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
                 message += `- ${count}x ${name} (${subtotal})\n`;
             }
+
+            // Extras: salsa incluida y palitos (siempre se informan, incluso si no eligió)
+            const salsaMsg = salsaTexto();
+            message += `- Salsa incluida: ${salsaMsg ? salsaMsg : 'No seleccionó salsa'}\n`;
+            message += `- Palitos: ${palitosCantidad > 0 ? palitosCantidad : 'No seleccionó palitos'}\n`;
 
             // Descuento por salsas premium (precio por pares)
             const cantidadSalsasPremium = cart.filter(item => item.isPremiumSalsa).length;
@@ -4467,10 +4634,28 @@
 
         function saveCart() {
             try {
-                const payload = { items: cart, savedAt: Date.now() };
+                const payload = { items: cart, salsa: salsaSeleccion, palitos: palitosCantidad, savedAt: Date.now() };
                 localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(payload));
             } catch (e) {
                 console.warn('No se pudo guardar el carrito:', e);
+            }
+        }
+
+        // Restaura salsa y palitos guardados (misma vida/TTL que el carrito).
+        // loadCart() ya borró la clave si expiró o es inválida, así que aquí
+        // sólo leemos lo vigente; si no hay nada, quedan en sus valores por defecto.
+        function restoreExtras() {
+            try {
+                const stored = localStorage.getItem(CART_STORAGE_KEY);
+                if (!stored) { resetExtras(); return; }
+                const parsed = JSON.parse(stored);
+                salsaSeleccion = ['soya', 'teriyaki', 'ambas'].includes(parsed.salsa) ? parsed.salsa : null;
+                palitosCantidad = Math.max(0, Math.min(10, parseInt(parsed.palitos) || 0));
+                updateSalsaUI();
+                const pc = document.getElementById('palitosCount');
+                if (pc) pc.innerText = palitosCantidad;
+            } catch (e) {
+                resetExtras();
             }
         }
 
@@ -4502,6 +4687,7 @@
         // Restaurar el carrito guardado al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
             cart = loadCart();
+            restoreExtras(); // salsa y palitos siguen el mismo TTL/limpieza que el carrito
             if (cart.length > 0) {
                 updateCartUI();
                 renderCartItems();
