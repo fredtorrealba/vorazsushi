@@ -925,6 +925,16 @@
         .dia-sushi-modal.open .dia-sushi-modal-content {
             transform: scale(1) translateY(0);
         }
+        /* Fotos del afiche como <img> reales superpuestos sobre los marcos del SVG.
+           Antes iban como <image> dentro del SVG, pero mobile WebKit las pintaba en
+           blanco de forma intermitente (sobre todo a la 2ª recarga). */
+        .ds-photo {
+            position: absolute;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 4.85%;
+            pointer-events: none;
+        }
 
         /* Modern Floating Label Inputs */
         .input-group {
@@ -4781,6 +4791,7 @@
                  por:  <img src="img/promo-dia-sushi.jpg" class="w-full rounded-[20px] shadow-2xl">
                  Las 2 ventanas grises (FOTO PROMO 1 / 2) son donde van tus fotos.
                  ============================================================ -->
+            <div class="ds-poster relative">
             <svg viewBox="0 0 800 1060" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img"
                  aria-label="Promo Día del Sushi: 2 promos, $7.490 cada una, 20 piezas"
                  class="w-full rounded-[20px] shadow-2xl" style="display:block">
@@ -4850,15 +4861,13 @@
                     <text x="400" y="379" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="900" font-size="27" letter-spacing="1.5" fill="#17110d">$7.490 · 20 PIEZAS</text>
                 </g>
 
-                <!-- Dos fotos (placeholders) -->
-                <g font-family="'Zen Kaku Gothic New', sans-serif">
-                    <!-- Promo Frita (foto real) -->
+                <!-- Marcos de las fotos. Las fotos NO van aquí dentro: se superponen
+                     como <img> HTML reales (.ds-photo, justo después del </svg>).
+                     El <image> SVG + clip-path fallaba al pintar en mobile WebKit
+                     (sobre todo a la 2ª recarga). Un <img> HTML carga siempre bien. -->
+                <g>
                     <rect x="60" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
-                    <image href="img/promo-frita.jpeg" xlink:href="img/promo-frita.jpeg" x="60" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip1)"/>
-
-                    <!-- Promo Fría -->
                     <rect x="410" y="436" width="330" height="300" rx="16" fill="url(#dsFrame)" stroke="#d8922a" stroke-opacity="0.45" stroke-width="1.5"/>
-                    <image href="img/promo-fria.jpeg" xlink:href="img/promo-fria.jpeg" x="410" y="436" width="330" height="300" preserveAspectRatio="xMidYMid slice" clip-path="url(#dsClip2)"/>
                 </g>
 
                 <!-- Nombres + descripción -->
@@ -4889,6 +4898,11 @@
                 <text x="400" y="972" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-weight="900" font-size="24" letter-spacing="3" fill="#f3ebdb">VÁLIDO SOLO EL 18 DE JUNIO</text>
                 <text x="400" y="1004" text-anchor="middle" font-family="'Zen Kaku Gothic New', sans-serif" font-size="15" letter-spacing="5" fill="#d8922a">DÍA DEL SUSHI</text>
             </svg>
+            <!-- Fotos reales superpuestas sobre los marcos del afiche (coordenadas en %
+                 del viewBox 800×1060, así escalan junto al SVG en cualquier pantalla) -->
+            <img src="img/promo-frita.jpeg" alt="Promo Frita" class="ds-photo" style="left:7.5%;top:41.13%;width:41.25%;height:28.30%">
+            <img src="img/promo-fria.jpeg" alt="Promo Fría" class="ds-photo" style="left:51.25%;top:41.13%;width:41.25%;height:28.30%">
+            </div>
 
             <!-- Botones AGREGAR del modal (visibilidad: DIA_SUSHI.modalBoton) -->
             <div id="diaSushiModalBtns" class="mt-3 grid grid-cols-2 gap-2" style="display:none">
